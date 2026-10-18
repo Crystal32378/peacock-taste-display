@@ -95,13 +95,15 @@ function startGold(r) {
   const x = 720 + d * Math.sin(a), y = 880 - d * Math.cos(a);
   const shape = st.mode === 'lover' ? HEART : SPARK;
   let out = '';
-  for (let i = 0; i < 9; i++) {
-    const dx = (Math.random() - 0.5) * 150, dl = (i * 0.32).toFixed(2), sc = (2.2 + Math.random() * 1.4).toFixed(2);
-    out += `<g transform="translate(${(x + (Math.random() - 0.5) * 50).toFixed(1)} ${y.toFixed(1)})"><path class="gp" d="${shape}" style="--dx:${dx.toFixed(0)}px;--dl:${dl}s;--sc:${sc}"/></g>`;
+  for (let i = 0; i < 14; i++) {
+    const dx = (Math.random() - 0.5) * 170, dl = (i * 0.22).toFixed(2), base = 2.2 + Math.random() * 1.4;
+    const lip = st.mode === 'lover' && i % 3 === 1; // every third flyer is a golden kiss
+    const sc = (lip ? base * 0.55 : base).toFixed(2);
+    out += `<g transform="translate(${(x + (Math.random() - 0.5) * 60).toFixed(1)} ${y.toFixed(1)})"><path class="gp" d="${lip ? KISS_TOP + KISS_BOT : shape}" style="--dx:${dx.toFixed(0)}px;--dl:${dl}s;--sc:${sc}"/></g>`;
   }
   if (st.mode === 'lover') {
     // the peacock stamps a kiss on its favourite feather
-    out += `<g transform="translate(${(x + 6).toFixed(1)} ${(y + 4).toFixed(1)}) rotate(-16) scale(1.9)"><g class="kiss"><path d="${KISS_TOP}" fill="#C4545E"/><path d="${KISS_BOT}" fill="#B3414F"/><path d="M-9 -4C-4 -7 4 -7 9 -4" stroke="#F3B6BC" stroke-width="1.6" fill="none" stroke-linecap="round" opacity=".7"/></g></g>`;
+    out += `<g transform="translate(${(x + 6).toFixed(1)} ${(y + 4).toFixed(1)}) rotate(-16) scale(1.9)"><g class="kiss"><path d="${KISS_TOP}" fill="#F2D58A"/><path d="${KISS_BOT}" fill="#D9B35E"/><path d="M-9 -4C-4 -7 4 -7 9 -4" stroke="#FFF6D6" stroke-width="1.6" fill="none" stroke-linecap="round" opacity=".8"/></g></g>`;
   }
   $('gold').innerHTML = out;
   el.classList.add('fav'); fan.classList.add('hasfav');
