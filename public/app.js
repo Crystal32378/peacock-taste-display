@@ -171,7 +171,7 @@ function showBridge() {
   setHead(st.mode === 'lover' ? 'flustered' : 'startled');
   $('bridge').hidden = true;
   snd.chime();
-  cap(T().bridgeHead, b.kind === 'theirs' ? T().bridgeTheirs(cn, b.item, p.name) : T().bridgeQloo(cn, b.item));
+  cap(T().bridgeHead, b.kind === 'theirs' ? T().bridgeTheirs(cn, b.item, p.name) : (r.engine === 'live' ? T().bridgeQloo : T().bridgeDemo)(cn, b.item));
 }
 
 function next() { st.idx = (st.idx + 1) % st.cast.length; play(); }

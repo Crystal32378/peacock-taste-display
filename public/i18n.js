@@ -120,8 +120,9 @@ export const UI = {
     cat: 'taste',
     fav: (heart, t, item) => `${heart ? '♥' : '✦'} The peacock is partial to the “${t}” feather: ${item}`,
     bridgeHead: 'But here is a door.',
-    bridgeTheirs: (cat, item, name) => `Nothing met on “${cat}”. But Qloo thinks you might love ${item} and, as it happens, so does ${name}.`,
+    bridgeTheirs: (cat, item, name) => `Nothing met on “${cat}”. But you might love ${item} and, as it happens, so does ${name}.`,
     bridgeQloo: (cat, item) => `Nothing met on “${cat}”. Qloo suggests you try ${item}.`,
+    bridgeDemo: (cat, item) => `Nothing met on “${cat}”. The peacock (demo data, not Qloo yet) suggests you try ${item}.`,
     engine: {
       live: 'Source: <b>Qloo live API</b>. Feather matches come from Qloo insights.',
       fixture: 'Source: <b>offline demo data (fixture)</b>.',
@@ -145,8 +146,9 @@ export const UI = {
     cat: '品味',
     fav: (heart, t, item) => `${heart ? '♥' : '✦'} 孔雀偏心「${t}」這一根：${item}`,
     bridgeHead: 'But here is a door.',
-    bridgeTheirs: (cat, item, name) => `「${cat}」這根沒對上，不過 Qloo 認為你可能會喜歡 ${item}，那剛好是 ${name} 的${cat}。`,
+    bridgeTheirs: (cat, item, name) => `「${cat}」這根沒對上，不過你可能會喜歡 ${item}，那剛好是 ${name} 的${cat}。`,
     bridgeQloo: (cat, item) => `「${cat}」這根沒對上。Qloo 倒是推薦你可以試試 ${item}。`,
+    bridgeDemo: (cat, item) => `「${cat}」這根沒對上。孔雀（示範資料，尚未接 Qloo）倒是建議你試試 ${item}。`,
     engine: {
       live: '資料來源：<b>Qloo 即時 API</b>。羽毛配對來自 Qloo 的 insights 結果。',
       fixture: '資料來源：<b>離線示範資料（fixture）</b>。',
