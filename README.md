@@ -1,5 +1,7 @@
 # 開屏 Taste Display
 
+![Taste Display: a peacock with opinions](docs/devpost-cover-peacock.png)
+
 > Taste is not a score. It is a display.
 
 A peacock that shows taste. Each of Qloo's ten entity types is one feather — **film, series, artist, book, place, destination, podcast, game, brand, person**. Open a profile and the tail opens. Feathers where your taste meets theirs shiver. If nothing meets, the peacock folds its tail, gives you a dry look, and moves on.
