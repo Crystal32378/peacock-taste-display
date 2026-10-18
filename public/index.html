@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="zh-Hant">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>開屏 Taste Display</title>
-<meta name="description" content="一隻孔雀，十根羽毛。品味對上的羽毛會抖，對不上就收屏。不給總分。">
+<title>Taste Display — a peacock with opinions</title>
+<meta name="description" content="A peacock, ten feathers. Where your taste meets theirs, the feathers shiver. Where it does not, the tail folds. No score, ever.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;1,400&family=Instrument+Sans:wght@400;500&family=Noto+Serif+TC:wght@300;400&display=swap" rel="stylesheet">
@@ -14,7 +14,7 @@
 <body>
 <div class="wrap">
   <div class="top"><span>Taste Display</span><span class="no">N° 001</span>
-    <span class="mode" role="group" aria-label="意圖"><button type="button" id="mFriend" aria-pressed="true">Friend</button><button type="button" id="mLover" aria-pressed="false">Lover</button></span>
+    <span class="right"><span class="mode lang" role="group" aria-label="Language"><button type="button" id="lEn" aria-pressed="true">EN</button><button type="button" id="lZh" aria-pressed="false">中</button></span><span class="mode" role="group" aria-label="Intent"><button type="button" id="mFriend" aria-pressed="true">Friend</button><button type="button" id="mLover" aria-pressed="false">Lover</button></span></span>
   </div>
   <div class="stage">
     <div class="who">
@@ -22,24 +22,24 @@
       <h1 id="name">&nbsp;</h1>
       <p class="meta" id="meta"></p>
       <p class="blurb" id="blurb"></p>
-      <p class="fict">虛構角色 · 18+ · 沒有人會被聯絡</p>
+      <p class="fict" id="fict">Fictional characters · 18+ · nobody is contacted</p>
     </div>
     <div id="stageSvg"></div>
   </div>
   <div class="cap" aria-live="polite"><p class="en" id="capEn"></p><p class="zh" id="capZh"></p><p class="fav" id="capFav"></p></div>
   <div class="ctl">
-    <button type="button" id="replay">重播</button>
-    <button type="button" id="bridge" hidden>孔雀小聲說：還有一根…</button>
-    <button type="button" id="next">下一位</button>
-    <button type="button" id="auto" aria-pressed="false">自動播放：關</button>
+    <button type="button" id="replay">Replay</button>
+    <button type="button" id="bridge" hidden></button>
+    <button type="button" id="next">Next</button>
+    <button type="button" id="auto" aria-pressed="false">Auto-play: off</button>
   </div>
-  <div class="cast" id="castRow" aria-label="選擇角色"></div>
+  <div class="cast" id="castRow" aria-label="Choose a character"></div>
   <details>
-    <summary>Qloo 呼叫紀錄</summary>
+    <summary id="sumText">Qloo call log</summary>
     <p class="engine" id="engine"></p>
     <pre id="trace"></pre>
     <p class="you" id="you"></p>
-    <p class="note">兩個人之間不給總分：孔雀只看哪幾根羽毛對上，從不評斷這個人。親和度數字只會出現在單一項目上。人物皆為虛構成年角色。</p>
+    <p class="note" id="note"></p>
   </details>
   <p class="foot">Taste is not a score. It is a display.</p>
 </div>

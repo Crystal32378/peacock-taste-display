@@ -138,3 +138,10 @@ pre{margin:12px 0 0;font:12px/1.7 ui-monospace,SFMono-Regular,Menlo,monospace;co
 .kiss{opacity:0;transform-box:fill-box;transform-origin:center;animation:stamp .7s cubic-bezier(.2,1.6,.4,1) .7s forwards;filter:drop-shadow(0 0 6px rgba(196,84,94,.55))}
 @keyframes stamp{0%{opacity:0;transform:scale(2.6) rotate(8deg)}55%{opacity:.98;transform:scale(.92)}100%{opacity:.9;transform:scale(1)}}
 @media (prefers-reduced-motion:reduce){.kiss{animation:none;opacity:.9}}
+
+.top .right{display:flex;gap:14px;align-items:center}
+.mode.lang button{letter-spacing:.12em;padding:7px 11px}
+html[data-lang=en] .lab .zh{display:none}
+html[data-lang=en] .cap .zh{font-family:var(--display);font-style:italic;font-size:clamp(15px,1.9vw,18px);letter-spacing:.01em;color:var(--dim);max-width:34em}
+html[data-lang=en] .who h1{font-family:var(--display);font-weight:400;letter-spacing:.04em}
+html[data-lang=en] .who .blurb,html[data-lang=en] .note,html[data-lang=en] .engine,html[data-lang=en] .you,html[data-lang=en] .cap .fav{font-family:var(--ui);letter-spacing:.01em}

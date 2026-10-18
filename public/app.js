@@ -1,65 +1,13 @@
 import { buildFan } from './fan.js';
+import { COPY, UI } from './i18n.js';
 
 const $ = (id) => document.getElementById(id);
 const MOODS = ['eager', 'stifled', 'unimpressed', 'ecstatic', 'sideeye', 'flustered', 'yawning', 'startled'];
 const heads = Object.fromEntries(MOODS.map((m) => [m, `assets/peacock-${m}.webp`]));
 
-// Quips. {cat} = a category where YOU have taste and they don't (the peacock judges feathers, never the person).
-const COPY = {
-  friend: {
-    swoon: [
-      ['The whole tail is humming.', '好幾根羽毛一起動了。孔雀自己都有點不好意思。'],
-      ['Fine. I am impressed.', '好吧，我承認。孔雀不常說這句，請你錄下來。'],
-      ['Oh, they have taste too.', '原來你不是孤軍奮戰。孔雀替你鬆了一口氣。'],
-    ],
-    shiver: [
-      ['Something is stirring.', '有羽毛對上了，尾巴自己抖了起來，孔雀努力裝沒事。'],
-      ['I am not shaking. You are.', '尾巴抖成這樣，孔雀堅持說是風。'],
-      ['Do not read into this.', '只是幾根羽毛的反射動作，不代表孔雀認同任何事。'],
-    ],
-    flicker: [
-      ['Only a flicker.', '只有一根輕輕動了一下，不夠抖。孔雀禮貌地收屏，下一位。'],
-      ['One feather. Cute.', '一根。孔雀點了點頭，那種「我有看到你的努力」的點頭。'],
-      ['Technically, a match.', '嚴格說來有對上。但孔雀的標準，是你知道的那種標準。'],
-    ],
-    fold: [
-      ['Not tonight.', '一根都沒動。孔雀收屏。不是你不好，是尾巴今天沒心情。'],
-      ['Nothing. Not one.', '孔雀不是針對你，孔雀是針對你的{cat}清單。'],
-      ['I checked twice.', '孔雀認真比對了兩次，結果和第一次一樣。禮貌地說：改天。'],
-      ['The tail has folded.', '收屏了。孔雀會把這次寫進「改天」，字很小。'],
-    ],
-    yawn: [['…again?', '又一根都沒動。孔雀打了個哈欠，當著你的面。']],
-    eyeroll: [['I am being very patient.', '連續好幾位都沒動，孔雀開始翻白眼。這不是對你，是對今天的尾巴運氣。']],
-    startle: [['…Wait.', '孔雀剛剛還在打哈欠。等一下，這個不一樣。']],
-  },
-  lover: {
-    swoon: [
-      ['Oh. The peacock is blushing.', '羽毛一起動了，孔雀把頭別開，假裝在看別的地方。'],
-      ['Do not look at me.', '孔雀整隻紅了。牠說是燈光的關係。'],
-      ['This is embarrassing.', '尾巴比孔雀誠實太多了。孔雀決定裝沒看到。'],
-    ],
-    shiver: [
-      ['Careful. It is trying not to look.', '藏不住的那種抖。孔雀假裝在整理羽毛。'],
-      ['It is not a reaction.', '孔雀說這只是肌肉痙攣。沒有人相信。'],
-      ['Stop smiling.', '孔雀抖得很明顯，還要你別笑。'],
-    ],
-    flicker: [
-      ['A flicker, and a sideways look.', '只有一根動了。孔雀瞄了你一眼，沒說話。'],
-      ['Almost.', '差一點。孔雀嘴上說無所謂，尾巴多晃了半秒。'],
-    ],
-    fold: [
-      ['Not tonight.', '一根都沒動。孔雀收屏。尾巴的事，跟你這個人沒關係。'],
-      ['Nothing to see here.', '孔雀不是針對你，孔雀是針對你的{cat}清單。'],
-      ['The tail has opinions.', '收屏了。孔雀有它的標準，而它今天沒有想解釋。'],
-    ],
-    yawn: [['…again?', '又一根都沒動。孔雀打了個哈欠，順便看了看手錶。']],
-    eyeroll: [['I am being very patient.', '連續好幾位都沒動，孔雀翻了白眼。這不是對你，是對今天的運氣。']],
-    startle: [['…Wait.', '孔雀剛剛還在打哈欠。等一下，這個不一樣。']],
-  },
-};
 let lastQuip = '';
 function quip(mode, key, cat) {
-  const pool = COPY[mode][key];
+  const pool = COPY[st.lang][mode][key];
   let pick;
   for (let i = 0; i < 4; i++) { pick = pool[Math.floor(Math.random() * pool.length)]; if (pick[1] !== lastQuip) break; }
   lastQuip = pick[1];
@@ -67,7 +15,11 @@ function quip(mode, key, cat) {
 }
 const HEAD_FOR = { swoon: 'ecstatic', shiver: 'stifled', flicker: 'sideeye', fold: 'unimpressed' };
 
-const st = { cast: [], labels: {}, viewer: null, idx: 0, rid: 0, auto: false, mode: 'friend', timer: null, cache: new Map(), streak: 0, current: null };
+const T = () => UI[st.lang];
+const catName = (type) => (st.lang === 'en' ? label(type).en.toLowerCase() : label(type).zh);
+let initialLang = 'en';
+try { const q = new URLSearchParams(location.search).get('lang'); const saved = localStorage.getItem('td-lang'); initialLang = q === 'zh' || q === 'en' ? q : saved === 'zh' || saved === 'en' ? saved : 'en'; } catch {}
+const st = { lang: initialLang, cast: [], labels: {}, viewer: null, idx: 0, rid: 0, auto: false, mode: 'friend', timer: null, cache: new Map(), streak: 0, current: null };
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const label = (t) => st.labels[t] || { en: t, zh: t };
@@ -107,8 +59,7 @@ function startGold(r) {
   }
   $('gold').innerHTML = out;
   el.classList.add('fav'); fan.classList.add('hasfav');
-  const t = label(fav.type);
-  $('capFav').textContent = (st.mode === 'lover' ? '♥ ' : '✦ ') + `孔雀偏心「${t.zh}」這一根：${fav.item}`;
+  $('capFav').textContent = T().fav(st.mode === 'lover', catName(fav.type), fav.item);
 }
 function setHead(mood) {
   $('head').setAttribute('class', mood ? 'mood-' + mood : ''); headEls.forEach((el) => el.classList.toggle('on', el.dataset.mood === mood)); }
@@ -116,10 +67,10 @@ function cap(en, zh) { $('capEn').textContent = en; $('capZh').textContent = zh;
 
 function showProfile(p) {
   $('name').textContent = p.name;
-  $('meta').textContent = `${p.age} · ${p.city}`;
-  $('blurb').textContent = p.blurb;
+  $('meta').textContent = `${p.age} · ${st.lang === 'en' ? p.cityEn : p.city}`;
+  $('blurb').textContent = st.lang === 'en' ? p.blurbEn : p.blurb;
   const img = $('portrait');
-  img.src = `assets/${p.portrait}`; img.alt = `${p.name}（虛構角色）`;
+  img.src = `assets/${p.portrait}`; img.alt = T().alt(p.name);
   document.querySelectorAll('#castRow button').forEach((b) => b.setAttribute('aria-current', b.dataset.id === p.id));
 }
 
@@ -142,16 +93,16 @@ function applyResult(r) {
 }
 
 function renderTrace(r) {
-  const src = { fixture: '離線示範資料（fixture）', live: 'Qloo 即時 API', fallback: '備援（Qloo 呼叫失敗，改用示範資料）', mixed: '混合（部分 Qloo 即時，部分備援）' };
-  $('engine').innerHTML = r.engine === 'live'
-    ? `資料來源：<b>${src.live}</b>。羽毛配對來自 Qloo 的 insights 結果。`
-    : `資料來源：<b>${src[r.engine] || r.engine}</b>。${r.mode === 'fixture' ? '這個部署還沒有設定 Qloo API key，所以下面的「相近」是我們手寫的示範資料，不是 Qloo 的輸出。' : ''}`;
-  $('trace').textContent = r.trace.map((t) => `[${t.source}${t.ms != null ? ' ' + t.ms + 'ms' : ''}] ${decodeURIComponent(t.call)}${t.error ? '  !! ' + t.error : ''}`).join('\n') || '（沒有呼叫：整張尾巴都是完全相同的項目，或沒有可比的類別）';
+  const E = T().engine;
+  $('engine').innerHTML = r.engine === 'live' ? E.live
+    : r.engine === 'fixture' ? E.fixture + (r.mode === 'fixture' ? E.fixtureNote : '')
+    : r.engine === 'fallback' ? E.fallback : E.mixed;
+  $('trace').textContent = r.trace.map((t) => `[${t.source}${t.ms != null ? ' ' + t.ms + 'ms' : ''}] ${decodeURIComponent(t.call)}${t.error ? '  !! ' + t.error : ''}`).join('\n') || T().noCalls;
 }
 
 function renderYou() {
   const v = st.viewer?.feathers || {};
-  $('you').textContent = '你的羽毛（示範用）：' + Object.entries(v).map(([t, a]) => `${label(t).zh} ${a.join('、')}`).join(' · ');
+  $('you').textContent = T().you + Object.entries(v).map(([t, a]) => `${st.lang === 'en' ? label(t).en.toLowerCase() : label(t).zh} ${a.join(T().sep)}`).join(' · ');
 }
 
 async function play() {
@@ -163,7 +114,7 @@ async function play() {
   const pending = display(p.id);
   await sleep(60); fan.classList.remove('open'); setHead(null);
   await sleep(900); if (id !== st.rid) return;
-  cap('Opening…', '孔雀正在整理羽毛。');
+  cap(...T().opening);
   const r = await pending; if (id !== st.rid) return;
   st.current = r; applyResult(r);
   await sleep(350); if (id !== st.rid) return;
@@ -176,7 +127,7 @@ async function play() {
   st.streak = match ? 0 : st.streak + 1;
   // a category where YOU have taste and they have none: fodder for the peacock's attitude
   const gap = r.feathers.find((f) => f.state === 'none' && f.yours.length && !f.theirs.length) || r.feathers.find((f) => f.state === 'none' && f.yours.length);
-  const cat = gap ? label(gap.type).zh : '品味';
+  const cat = gap ? catName(gap.type) : T().cat;
   fan.classList.add('verdict');
   if (match && prev >= 2) {
     // after a losing streak the peacock does a double take before reacting
@@ -201,7 +152,7 @@ async function play() {
 
 function showBridge() {
   const r = st.current; if (!r?.bridge) return;
-  const b = r.bridge, t = label(b.type);
+  const b = r.bridge, cn = catName(b.type);
   feathers.forEach((el) => el.classList.toggle('bridge', el.dataset.type === b.type));
   labs.forEach((el) => {
     const on = el.dataset.type === b.type; el.classList.toggle('bridge', on);
@@ -212,9 +163,7 @@ function showBridge() {
   fan.classList.add('open'); // the door needs the tail open again
   setHead(st.mode === 'lover' ? 'flustered' : 'startled');
   $('bridge').hidden = true;
-  cap('But here is a door.', b.kind === 'theirs'
-    ? `「${t.zh}」這根沒對上，不過 Qloo 認為你可能會喜歡 ${b.item}，那剛好是 ${p.name} 的${t.zh}。`
-    : `「${t.zh}」這根沒對上。Qloo 倒是推薦你可以試試 ${b.item}。`);
+  cap(T().bridgeHead, b.kind === 'theirs' ? T().bridgeTheirs(cn, b.item, p.name) : T().bridgeQloo(cn, b.item));
 }
 
 function next() { st.idx = (st.idx + 1) % st.cast.length; play(); }
@@ -233,17 +182,30 @@ async function init() {
   $('next').onclick = next;
   $('replay').onclick = () => play();
   $('bridge').onclick = showBridge;
-  const setAuto = () => { $('auto').textContent = '自動播放：' + (st.auto ? '開' : '關'); $('auto').setAttribute('aria-pressed', st.auto); };
+  const setAuto = () => { $('auto').textContent = T().auto(st.auto); $('auto').setAttribute('aria-pressed', st.auto); };
   $('auto').onclick = () => { st.auto = !st.auto; setAuto(); if (st.auto && fan.classList.contains('verdict')) { const id = st.rid; st.timer = setTimeout(() => id === st.rid && next(), 1500); } };
   for (const m of ['friend', 'lover']) $(m === 'friend' ? 'mFriend' : 'mLover').onclick = () => {
     st.mode = m; $('mFriend').setAttribute('aria-pressed', m === 'friend'); $('mLover').setAttribute('aria-pressed', m === 'lover'); play();
   };
-  setAuto();
+  const applyStatic = () => {
+    document.documentElement.lang = st.lang === 'en' ? 'en' : 'zh-Hant';
+    document.documentElement.dataset.lang = st.lang;
+    document.title = T().title;
+    $('replay').textContent = T().replay; $('next').textContent = T().next; $('bridge').textContent = T().bridge;
+    $('sumText').textContent = T().summary; $('fict').textContent = T().fict; $('note').textContent = T().note;
+    $('lEn').setAttribute('aria-pressed', st.lang === 'en'); $('lZh').setAttribute('aria-pressed', st.lang === 'zh');
+    setAuto();
+  };
+  for (const [id, l] of [['lEn', 'en'], ['lZh', 'zh']]) $(id).onclick = () => {
+    if (st.lang === l) return; st.lang = l; try { localStorage.setItem('td-lang', l); } catch {}
+    applyStatic(); renderYou(); st.cache.clear(); play();
+  };
+  applyStatic();
 
   // first frame: Mira already open and shivering (no waiting)
   const p = st.cast[0]; showProfile(p);
   const r = await display(p.id); st.current = r; applyResult(r);
   fan.classList.add('open', 'verdict'); if (r.verdict !== 'fold' && !reduce) fan.classList.add('match');
-  setHead(HEAD_FOR[r.verdict]); cap(...quip('friend', r.verdict, '品味')); startGold(r);
+  setHead(HEAD_FOR[r.verdict]); cap(...quip('friend', r.verdict, T().cat)); startGold(r);
 }
-init().catch((e) => { document.body.insertAdjacentHTML('beforeend', `<p style="padding:24px;color:#E2C783">孔雀暫時出不來：${String(e.message || e)}</p>`); });
+init().catch((e) => { document.body.insertAdjacentHTML('beforeend', `<p style="padding:24px;color:#E2C783">${(UI[initialLang] || UI.en).err}${String(e.message || e)}</p>`); });

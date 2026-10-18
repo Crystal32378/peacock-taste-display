@@ -31,7 +31,7 @@ function limited(ip, max = 40, windowMs = 60_000) {
   return arr.length > max;
 }
 
-const publicCast = () => cast.map(({ id, name, age, city, portrait, blurb, feathers }) => ({ id, name, age, city, portrait, blurb, feathers: cleanFeathers(feathers) }));
+const publicCast = () => cast.map(({ id, name, age, city, cityEn, portrait, blurb, blurbEn, feathers }) => ({ id, name, age, city, cityEn, portrait, blurb, blurbEn, feathers: cleanFeathers(feathers) }));
 
 async function display(args = {}) {
   const profile = cast.find((c) => c.id === args.profileId);
