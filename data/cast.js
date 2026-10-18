@@ -57,3 +57,8 @@ export const cast = [
   { id: 'kai', name: 'Kai', age: 24, city: '台北', portrait: 'kai.jpg', blurb: '耳機掛脖子，愛 club、球鞋，閒不下來。', cityEn: 'Taipei', blurbEn: 'Headphones round the neck. Clubs, sneakers, cannot sit still.',
     feathers: { artist: ['Four Tet'], brand: ['Nike'], podcast: ['Armchair Expert'], tv_show: ['Euphoria'] } },
 ];
+
+// Walking order for "Next" / auto-play. Chosen so the peacock's mood arc actually plays:
+// a flicker, two folds in a row (yawn, then eye-roll), then a real match (the double take).
+const WALK = ['mira', 'dax', 'theo', 'kai', 'lin', 'ren', 'oliver', 'jun', 'bei', 'suyin'];
+cast.sort((a, b) => WALK.indexOf(a.id) - WALK.indexOf(b.id));

@@ -14,11 +14,12 @@ function quip(mode, key, gapType) {
   const [head, body] = pool[i]; lastQuip = body;
   const needsCat = body.includes('{cat}') || head.includes('{cat}');
   const type = needsCat ? (gapType || 'movie') : '';
-  const cat = gapType ? catName(gapType) : T().cat;
+  const cat = catName(type || 'movie'); // same word the recording uses, so text and voice always agree
   return [head.replace('{cat}', cat), body.replace('{cat}', cat), lineId(st.lang, mode, key, i, type), lineText(head, body, cat)];
 }
 // show the caption and (if sound is on) let the peacock say it
 function speakCap(q) { cap(q[0], q[1]); snd.say(st.lang, q[2], q[3]); }
+const LIGHT = new Set(['movie', 'tv_show', 'place', 'destination', 'brand', 'podcast']);
 const HEAD_FOR = { swoon: 'ecstatic', shiver: 'stifled', flicker: 'sideeye', fold: 'unimpressed' };
 
 const T = () => UI[st.lang];
@@ -64,7 +65,7 @@ function startGold(r) {
     out += `<g transform="translate(${(x + 6).toFixed(1)} ${(y + 4).toFixed(1)}) rotate(-16) scale(1.9)"><g class="kiss"><path d="${KISS_TOP}" fill="#F2D58A"/><path d="${KISS_BOT}" fill="#D9B35E"/><path d="M-9 -4C-4 -7 4 -7 9 -4" stroke="#FFF6D6" stroke-width="1.6" fill="none" stroke-linecap="round" opacity=".8"/></g></g>`;
   }
   $('gold').innerHTML = out;
-  snd.chime(); if (st.mode === 'lover') setTimeout(snd.pop, 800);
+  snd.chime(); if (st.mode === 'lover') { clearTimeout(st.popT); st.popT = setTimeout(snd.pop, 800); }
   el.classList.add('fav'); fan.classList.add('hasfav');
   $('capFav').textContent = T().fav(st.mode === 'lover', catName(fav.type), fav.item);
 }
@@ -114,14 +115,19 @@ function renderYou() {
 
 async function play() {
   const id = ++st.rid, p = st.cast[st.idx];
-  clearTimeout(st.timer);
+  clearTimeout(st.timer); clearTimeout(st.popT);
+  snd.stopVoice(); // the previous character's line must not talk over this one
   fan.classList.remove('match', 'verdict', 'swoon'); $('bridge').hidden = true; stopGold();
+  // wipe the previous verdict at once, so a new face never wears the last one's caption or gold names
+  cap('', '');
+  feathers.forEach((el) => el.classList.remove('res', 'bridge', 'fav'));
+  labs.forEach((el) => { el.classList.remove('res', 'bridge', 'fav'); el.querySelector('.nm').textContent = ''; });
   setHead('eager');
   showProfile(p);
   const pending = display(p.id);
   await sleep(60); fan.classList.remove('open'); setHead(null);
   await sleep(900); if (id !== st.rid) return;
-  cap(...T().opening);
+  cap(...T().opening(p.name));
   const r = await pending; if (id !== st.rid) return;
   st.current = r; applyResult(r);
   await sleep(350); if (id !== st.rid) return;
@@ -129,17 +135,19 @@ async function play() {
   await sleep(1900); if (id !== st.rid) return;
   const match = r.verdict === 'swoon' || r.verdict === 'shiver';
   const lover = st.mode === 'lover';
-  const folded = r.verdict === 'fold' || r.verdict === 'flicker';
+  // only a true fold closes the tail. A flicker means something did meet, so the lit feather stays lit.
+  const folded = r.verdict === 'fold';
   const prev = st.streak;
   st.streak = match ? 0 : st.streak + 1;
-  // a category where YOU have taste and they have none: fodder for the peacock's attitude
-  const gap = r.feathers.find((f) => f.state === 'none' && f.yours.length && !f.theirs.length) || r.feathers.find((f) => f.state === 'none' && f.yours.length);
+  // a category where YOU have taste and they have none: fodder for the peacock's attitude.
+  // Only light-hearted categories are teased ("your podcast list"), never someone's books or games.
+  const gap = r.feathers.find((f) => LIGHT.has(f.type) && f.state === 'none' && f.yours.length && !f.theirs.length) || r.feathers.find((f) => LIGHT.has(f.type) && f.state === 'none' && f.yours.length);
   const gapType = gap ? gap.type : null;
   fan.classList.add('verdict');
   if (match && prev >= 2) {
-    // after a losing streak the peacock does a double take before reacting
+    // after a losing streak the peacock does a double take before reacting; wait for the line to finish
     setHead('startled'); speakCap(quip(st.mode, 'startle', gapType));
-    await sleep(1700); if (id !== st.rid) return;
+    await Promise.all([sleep(1700), snd.whenDone(3800)]); if (id !== st.rid) return;
   }
   if (match && !reduce) fan.classList.add('match');
   startGold(r);
@@ -149,11 +157,11 @@ async function play() {
   $('bridge').hidden = !(r.bridge && (r.verdict === 'fold' || r.verdict === 'flicker'));
   if (folded) {
     // no overlap worth a shiver: the peacock folds its tail, head stays, dry look
-    await sleep(r.verdict === 'flicker' ? 2600 : 2200); if (id !== st.rid) return;
+    await sleep(2200); if (id !== st.rid) return;
     fan.classList.remove('open', 'match'); stopGold();
   }
   if (!st.auto) return;
-  await sleep(match ? 4800 : 1800); if (id !== st.rid) return;
+  await Promise.all([sleep(match ? 4800 : 1800), snd.whenDone(9000)]); if (id !== st.rid) return;
   next();
 }
 
@@ -170,7 +178,7 @@ function showBridge() {
   fan.classList.add('open'); // the door needs the tail open again
   setHead(st.mode === 'lover' ? 'flustered' : 'startled');
   $('bridge').hidden = true;
-  snd.chime();
+  snd.chime(); snd.say('en', 'en.bridge.head', T().bridgeHead); // the one recorded line of the door; the rest is templated text
   cap(T().bridgeHead, b.kind === 'theirs' ? T().bridgeTheirs(cn, b.item, p.name) : (r.engine === 'live' ? T().bridgeQloo : T().bridgeDemo)(cn, b.item));
 }
 
@@ -200,7 +208,7 @@ async function init() {
     document.documentElement.dataset.lang = st.lang;
     document.title = T().title;
     $('replay').textContent = T().replay; $('next').textContent = T().next; $('bridge').textContent = T().bridge;
-    $('sumText').textContent = T().summary; $('fict').textContent = T().fict; $('note').textContent = T().note;
+    $('sumText').textContent = T().summary; $('setup').textContent = T().setup; $('fict').textContent = T().fict; $('note').textContent = T().note;
     $('lEn').setAttribute('aria-pressed', st.lang === 'en'); $('lZh').setAttribute('aria-pressed', st.lang === 'zh');
     setAuto(); $('snd').textContent = UI_SOUND[st.lang](snd.isOn()); $('snd').setAttribute('aria-pressed', snd.isOn());
   };

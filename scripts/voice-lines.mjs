@@ -13,5 +13,7 @@ export function enumerateLines(langs = ['en', 'zh']) {
       } else out.push({ lang, id: lineId(lang, mode, key, i, ''), text: lineText(head, body, '') });
     });
   }
+  // the one recorded line of "the door" (the rest of the bridge sentence is templated with item names)
+  if (langs.includes('en')) out.push({ lang: 'en', id: 'en.bridge.head', text: 'But here is a door.' });
   return out;
 }

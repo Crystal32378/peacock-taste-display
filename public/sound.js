@@ -37,26 +37,46 @@ export function chime() { // gold sparkle
   } catch {}
 }
 
+// A line is "in flight" from say() until it ends, errors, or is stopped. whenDone() lets the caller wait for it.
+let fin = null, speakT = 0, curU = null;
+function settle() { const f = fin; fin = null; if (f) f(); }
+
 export function stopVoice() {
+  clearTimeout(speakT);
   try { if (audio) { audio.pause(); audio = null; } } catch {}
   try { window.speechSynthesis?.cancel(); } catch {}
+  settle();
+}
+
+// resolves when the current line has finished (or after maxMs); immediately if nothing is playing
+export function whenDone(maxMs = 4000) {
+  return new Promise((res) => {
+    if (!fin) return res();
+    const prev = fin; fin = () => { prev(); res(); };
+    setTimeout(res, maxMs);
+  });
 }
 
 function browserVoice(text, lang) {
-  const ss = window.speechSynthesis; if (!ss) return;
-  const u = new SpeechSynthesisUtterance(text);
+  const ss = window.speechSynthesis; if (!ss) return settle();
+  const u = new SpeechSynthesisUtterance(text); curU = u; // keep a reference: Chrome can garbage-collect a playing utterance
   const want = lang === 'zh' ? 'zh-TW' : 'en-GB';
   u.lang = want; u.rate = lang === 'zh' ? 1 : 0.94; u.pitch = lang === 'zh' ? 1 : 0.85;
   const v = ss.getVoices().find((x) => x.lang === want) || ss.getVoices().find((x) => x.lang.startsWith(want.slice(0, 2)));
   if (v) u.voice = v;
-  ss.speak(u);
+  u.onend = u.onerror = () => { if (curU === u) settle(); };
+  // Chrome swallows a speak() issued in the same tick as cancel(); give it a beat
+  clearTimeout(speakT); speakT = setTimeout(() => ss.speak(u), 80);
 }
 
-// id: stable line id; text: what to say if no recording exists
+// id: stable line id; text: what to say if no recording exists.
+// Only English has recordings (the British voice); the 中 side uses the browser's own voice without a pointless 404.
 export function say(lang, id, text) {
   if (!on) return; stopVoice();
-  if (window.__NOAUDIO) return browserVoice(text, lang);
+  fin = () => {};
+  if (window.__NOAUDIO || lang !== 'en') return browserVoice(text, lang);
   const a = new Audio(`audio/${lang}/${id}.mp3`); audio = a;
+  a.onended = () => { if (audio === a) { audio = null; settle(); } };
   a.onerror = () => { if (audio === a) { audio = null; browserVoice(text, lang); } };
   a.play().catch(() => { if (audio === a) { audio = null; browserVoice(text, lang); } });
 }
