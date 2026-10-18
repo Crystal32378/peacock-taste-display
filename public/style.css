@@ -104,3 +104,22 @@ pre{margin:12px 0 0;font:12px/1.7 ui-monospace,SFMono-Regular,Menlo,monospace;co
 /* the fan is decoration only; its glow overflows the viewBox and must never eat clicks */
 #svg{pointer-events:none}
 .top{position:relative;z-index:2}
+
+/* head body language: every expression moves a little, pivoting at the base of the neck */
+#head{transform-origin:720px 920px;transform-box:view-box}
+#head.mood-eager{animation:breathe 3.2s ease-in-out infinite}
+#head.mood-stifled{animation:tremble .13s ease-in-out infinite alternate}
+#head.mood-ecstatic{animation:bob .9s ease-in-out infinite}
+#head.mood-sideeye{animation:turnaway 1.1s cubic-bezier(.3,0,.2,1) forwards}
+#head.mood-unimpressed{animation:turnaway .8s cubic-bezier(.3,0,.2,1) forwards}
+#head.mood-yawning{animation:stretch 1.4s ease-in-out forwards}
+#head.mood-startled{animation:jolt .55s cubic-bezier(.2,1.8,.4,1) forwards}
+#head.mood-flustered{animation:wobble .7s ease-in-out infinite alternate}
+@keyframes breathe{50%{transform:scale(1.012)}}
+@keyframes tremble{from{transform:rotate(-.7deg)}to{transform:rotate(.7deg)}}
+@keyframes bob{50%{transform:translateY(-8px) rotate(1.2deg)}}
+@keyframes turnaway{from{transform:rotate(0)}to{transform:rotate(-5deg) translateX(-6px)}}
+@keyframes stretch{40%{transform:scale(1.03,1.07)}70%{transform:scale(1.03,1.07)}100%{transform:scale(1)}}
+@keyframes jolt{from{transform:translateY(0) scale(1)}35%{transform:translateY(-26px) scale(1.06)}to{transform:translateY(0) scale(1)}}
+@keyframes wobble{from{transform:rotate(-2.2deg)}to{transform:rotate(2.2deg) translateY(-3px)}}
+@media (prefers-reduced-motion:reduce){#head{animation:none!important}}

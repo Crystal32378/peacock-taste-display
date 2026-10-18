@@ -4,25 +4,70 @@ const $ = (id) => document.getElementById(id);
 const MOODS = ['eager', 'stifled', 'unimpressed', 'ecstatic', 'sideeye', 'flustered', 'yawning', 'startled'];
 const heads = Object.fromEntries(MOODS.map((m) => [m, `assets/peacock-${m}.webp`]));
 
+// Quips. {cat} = a category where YOU have taste and they don't (the peacock judges feathers, never the person).
 const COPY = {
   friend: {
-    swoon: ['The whole tail is humming.', '好幾根羽毛一起動了。孔雀自己都有點不好意思。'],
-    shiver: ['Something is stirring.', '有羽毛對上了，尾巴自己抖了起來，孔雀努力裝沒事。'],
-    flicker: ['Only a flicker.', '只有一根輕輕動了一下，不夠抖。孔雀禮貌地收屏，下一位。'],
-    fold: ['Not tonight.', '一根都沒動。孔雀收屏。不是你不好，是尾巴今天沒心情。'],
-    yawn: ['…again?', '又一根都沒動。孔雀打了個哈欠。'],
+    swoon: [
+      ['The whole tail is humming.', '好幾根羽毛一起動了。孔雀自己都有點不好意思。'],
+      ['Fine. I am impressed.', '好吧，我承認。孔雀不常說這句，請你錄下來。'],
+      ['Oh, they have taste too.', '原來你不是孤軍奮戰。孔雀替你鬆了一口氣。'],
+    ],
+    shiver: [
+      ['Something is stirring.', '有羽毛對上了，尾巴自己抖了起來，孔雀努力裝沒事。'],
+      ['I am not shaking. You are.', '尾巴抖成這樣，孔雀堅持說是風。'],
+      ['Do not read into this.', '只是幾根羽毛的反射動作，不代表孔雀認同任何事。'],
+    ],
+    flicker: [
+      ['Only a flicker.', '只有一根輕輕動了一下，不夠抖。孔雀禮貌地收屏，下一位。'],
+      ['One feather. Cute.', '一根。孔雀點了點頭，那種「我有看到你的努力」的點頭。'],
+      ['Technically, a match.', '嚴格說來有對上。但孔雀的標準，是你知道的那種標準。'],
+    ],
+    fold: [
+      ['Not tonight.', '一根都沒動。孔雀收屏。不是你不好，是尾巴今天沒心情。'],
+      ['Nothing. Not one.', '孔雀不是針對你，孔雀是針對你的{cat}清單。'],
+      ['I checked twice.', '孔雀認真比對了兩次，結果和第一次一樣。禮貌地說：改天。'],
+      ['The tail has folded.', '收屏了。孔雀會把這次寫進「改天」，字很小。'],
+    ],
+    yawn: [['…again?', '又一根都沒動。孔雀打了個哈欠，當著你的面。']],
+    eyeroll: [['I am being very patient.', '連續好幾位都沒動，孔雀開始翻白眼。這不是對你，是對今天的尾巴運氣。']],
+    startle: [['…Wait.', '孔雀剛剛還在打哈欠。等一下，這個不一樣。']],
   },
   lover: {
-    swoon: ['Oh. The peacock is blushing.', '羽毛一起動了，孔雀把頭別開，假裝在看別的地方。'],
-    shiver: ['Careful. It is trying not to look.', '藏不住的那種抖。孔雀假裝在整理羽毛。'],
-    flicker: ['A flicker, and a sideways look.', '只有一根動了。孔雀瞄了你一眼，沒說話。'],
-    fold: ['Not tonight.', '一根都沒動。孔雀收屏。尾巴的事，跟你這個人沒關係。'],
-    yawn: ['…again?', '又一根都沒動。孔雀打了個哈欠。'],
+    swoon: [
+      ['Oh. The peacock is blushing.', '羽毛一起動了，孔雀把頭別開，假裝在看別的地方。'],
+      ['Do not look at me.', '孔雀整隻紅了。牠說是燈光的關係。'],
+      ['This is embarrassing.', '尾巴比孔雀誠實太多了。孔雀決定裝沒看到。'],
+    ],
+    shiver: [
+      ['Careful. It is trying not to look.', '藏不住的那種抖。孔雀假裝在整理羽毛。'],
+      ['It is not a reaction.', '孔雀說這只是肌肉痙攣。沒有人相信。'],
+      ['Stop smiling.', '孔雀抖得很明顯，還要你別笑。'],
+    ],
+    flicker: [
+      ['A flicker, and a sideways look.', '只有一根動了。孔雀瞄了你一眼，沒說話。'],
+      ['Almost.', '差一點。孔雀嘴上說無所謂，尾巴多晃了半秒。'],
+    ],
+    fold: [
+      ['Not tonight.', '一根都沒動。孔雀收屏。尾巴的事，跟你這個人沒關係。'],
+      ['Nothing to see here.', '孔雀不是針對你，孔雀是針對你的{cat}清單。'],
+      ['The tail has opinions.', '收屏了。孔雀有它的標準，而它今天沒有想解釋。'],
+    ],
+    yawn: [['…again?', '又一根都沒動。孔雀打了個哈欠，順便看了看手錶。']],
+    eyeroll: [['I am being very patient.', '連續好幾位都沒動，孔雀翻了白眼。這不是對你，是對今天的運氣。']],
+    startle: [['…Wait.', '孔雀剛剛還在打哈欠。等一下，這個不一樣。']],
   },
 };
+let lastQuip = '';
+function quip(mode, key, cat) {
+  const pool = COPY[mode][key];
+  let pick;
+  for (let i = 0; i < 4; i++) { pick = pool[Math.floor(Math.random() * pool.length)]; if (pick[1] !== lastQuip) break; }
+  lastQuip = pick[1];
+  return [pick[0], pick[1].replace('{cat}', cat)];
+}
 const HEAD_FOR = { swoon: 'ecstatic', shiver: 'stifled', flicker: 'sideeye', fold: 'unimpressed' };
 
-const st = { cast: [], labels: {}, viewer: null, idx: 0, rid: 0, auto: false, mode: 'friend', timer: null, cache: new Map(), lastFold: false, current: null };
+const st = { cast: [], labels: {}, viewer: null, idx: 0, rid: 0, auto: false, mode: 'friend', timer: null, cache: new Map(), streak: 0, current: null };
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const label = (t) => st.labels[t] || { en: t, zh: t };
@@ -37,7 +82,8 @@ async function display(id) {
   return st.cache.get(key);
 }
 
-function setHead(mood) { headEls.forEach((el) => el.classList.toggle('on', el.dataset.mood === mood)); }
+function setHead(mood) {
+  $('head').setAttribute('class', mood ? 'mood-' + mood : ''); headEls.forEach((el) => el.classList.toggle('on', el.dataset.mood === mood)); }
 function cap(en, zh) { $('capEn').textContent = en; $('capZh').textContent = zh; }
 
 function showProfile(p) {
@@ -94,16 +140,25 @@ async function play() {
   fan.classList.add('open'); setHead('eager');
   await sleep(1900); if (id !== st.rid) return;
   const match = r.verdict === 'swoon' || r.verdict === 'shiver';
-  const yawn = r.verdict === 'fold' && st.lastFold;
-  st.lastFold = r.verdict === 'fold';
-  fan.classList.add('verdict');
-  if (match && !reduce) fan.classList.add('match');
   const lover = st.mode === 'lover';
-  setHead(yawn ? 'yawning' : lover && r.verdict === 'swoon' ? 'flustered' : HEAD_FOR[r.verdict]);
-  const [en, zh] = COPY[st.mode][yawn ? 'yawn' : r.verdict];
-  cap(en, zh);
+  const folded = r.verdict === 'fold' || r.verdict === 'flicker';
+  const prev = st.streak;
+  st.streak = match ? 0 : st.streak + 1;
+  // a category where YOU have taste and they have none: fodder for the peacock's attitude
+  const gap = r.feathers.find((f) => f.state === 'none' && f.yours.length && !f.theirs.length) || r.feathers.find((f) => f.state === 'none' && f.yours.length);
+  const cat = gap ? label(gap.type).zh : '品味';
+  fan.classList.add('verdict');
+  if (match && prev >= 2) {
+    // after a losing streak the peacock does a double take before reacting
+    setHead('startled'); cap(...quip(st.mode, 'startle', cat));
+    await sleep(1700); if (id !== st.rid) return;
+  }
+  if (match && !reduce) fan.classList.add('match');
+  const key = r.verdict === 'fold' && st.streak >= 3 ? 'eyeroll' : r.verdict === 'fold' && st.streak === 2 ? 'yawn' : r.verdict;
+  setHead(key === 'eyeroll' ? 'sideeye' : key === 'yawn' ? 'yawning' : lover && r.verdict === 'swoon' ? 'flustered' : HEAD_FOR[r.verdict]);
+  cap(...quip(st.mode, key, cat));
   $('bridge').hidden = !(r.bridge && (r.verdict === 'fold' || r.verdict === 'flicker'));
-  if (!match) {
+  if (folded) {
     // no overlap worth a shiver: the peacock folds its tail, head stays, dry look
     await sleep(r.verdict === 'flicker' ? 2600 : 2200); if (id !== st.rid) return;
     fan.classList.remove('open', 'match');
@@ -156,6 +211,6 @@ async function init() {
   const p = st.cast[0]; showProfile(p);
   const r = await display(p.id); st.current = r; applyResult(r);
   fan.classList.add('open', 'verdict'); if (r.verdict !== 'fold' && !reduce) fan.classList.add('match');
-  setHead(HEAD_FOR[r.verdict]); cap(...COPY.friend[r.verdict]);
+  setHead(HEAD_FOR[r.verdict]); cap(...quip('friend', r.verdict, '品味'));
 }
 init().catch((e) => { document.body.insertAdjacentHTML('beforeend', `<p style="padding:24px;color:#E2C783">孔雀暫時出不來：${String(e.message || e)}</p>`); });
