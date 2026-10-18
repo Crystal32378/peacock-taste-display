@@ -101,3 +101,6 @@ pre{margin:12px 0 0;font:12px/1.7 ui-monospace,SFMono-Regular,Menlo,monospace;co
 .top span:first-child{white-space:nowrap}
 @media (max-width:520px){.top .no{display:none}}
 .fan.verdict:not(.open) ~ #labs .lab{opacity:0;transition-delay:0s}
+/* the fan is decoration only; its glow overflows the viewBox and must never eat clicks */
+#svg{pointer-events:none}
+.top{position:relative;z-index:2}
