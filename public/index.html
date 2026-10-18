@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>開屏 Taste Display</title>
+<meta name="description" content="一隻孔雀，十根羽毛。品味對上的羽毛會抖，對不上就收屏。不給總分。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;1,400&family=Instrument+Sans:wght@400;500&family=Noto+Serif+TC:wght@300;400&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Ccircle cx=%2716%27 cy=%2716%27 r=%2714%27 fill=%27%230C1512%27 stroke=%27%23C9A66B%27/%3E%3Cellipse cx=%2716%27 cy=%2714%27 rx=%276%27 ry=%278%27 fill=%27%231B9AA6%27/%3E%3Cellipse cx=%2716%27 cy=%2715%27 rx=%272.4%27 ry=%273.6%27 fill=%27%230A0E2C%27/%3E%3C/svg%3E">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><span>Taste Display</span><span class="no">N° 001</span>
+    <span class="mode" role="group" aria-label="意圖"><button type="button" id="mFriend" aria-pressed="true">Friend</button><button type="button" id="mLover" aria-pressed="false">Lover</button></span>
+  </div>
+  <div class="stage">
+    <div class="who">
+      <div class="arch"><img id="portrait" alt="" width="720" height="900"></div>
+      <h1 id="name">&nbsp;</h1>
+      <p class="meta" id="meta"></p>
+      <p class="blurb" id="blurb"></p>
+      <p class="fict">虛構角色 · 18+ · 沒有人會被聯絡</p>
+    </div>
+    <div id="stageSvg"></div>
+  </div>
+  <div class="cap" aria-live="polite"><p class="en" id="capEn"></p><p class="zh" id="capZh"></p></div>
+  <div class="ctl">
+    <button type="button" id="replay">重播</button>
+    <button type="button" id="bridge" hidden>孔雀小聲說：還有一根…</button>
+    <button type="button" id="next">下一位</button>
+    <button type="button" id="auto" aria-pressed="false">自動播放：關</button>
+  </div>
+  <div class="cast" id="castRow" aria-label="選擇角色"></div>
+  <details>
+    <summary>Qloo 呼叫紀錄</summary>
+    <p class="engine" id="engine"></p>
+    <pre id="trace"></pre>
+    <p class="you" id="you"></p>
+    <p class="note">兩個人之間不給總分：孔雀只看哪幾根羽毛對上，從不評斷這個人。親和度數字只會出現在單一項目上。人物皆為虛構成年角色。</p>
+  </details>
+  <p class="foot">Taste is not a score. It is a display.</p>
+</div>
+<script type="module" src="app.js"></script>
+</body>
+</html>

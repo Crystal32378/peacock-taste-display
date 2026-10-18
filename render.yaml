@@ -1,0 +1,15 @@
+# Render Blueprint — public demo. Dashboard → New → Blueprint → pick this repo.
+# Set QLOO_API_KEY in the dashboard (sync: false keeps it out of git).
+services:
+  - type: web
+    name: taste-display
+    runtime: node
+    plan: starter
+    buildCommand: echo "zero dependencies"
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_VERSION
+        value: 22
+      - key: QLOO_API_KEY
+        sync: false
