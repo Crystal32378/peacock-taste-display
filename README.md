@@ -43,6 +43,19 @@ The Qloo call trace is shown in the page (「Qloo 呼叫紀錄」), so a judge c
 QLOO_API_KEY=... npm run qloo:smoke   # prints raw Qloo responses to verify the response shape
 ```
 
+## Sound (optional, off by default)
+
+The 「Sound」 toggle adds synthesised effects (feather rustle, a gold chime, a kiss "pop" in Lover mode — no audio files, no copyright) and lets the peacock speak its lines.
+
+- Without recordings it uses the browser's own voice (en-GB / zh-TW).
+- For a proper voice, record every line once with Google Cloud Text-to-Speech and commit the mp3s; the site picks them up automatically:
+
+```bash
+export GOOGLE_TTS_API_KEY=...        # API key restricted to the Cloud Text-to-Speech API
+npm run voice:list                   # audition the available voices
+npm run voice                        # records public/audio/en/*.mp3 (48 lines); add -- --lang en,zh for Chinese too
+```
+
 ## API
 
 - `GET /health` — status and Qloo mode

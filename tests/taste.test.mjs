@@ -93,3 +93,12 @@ test('favorite: an identical item beats a neighbour; folded tails have none', as
   const theo = await run('theo');
   assert.ok(theo.favorite === null || theo.favorite.kind === 'neighbor');
 });
+
+import { enumerateLines } from '../scripts/voice-lines.mjs';
+test('voice lines: unique ids, no leftover placeholders, both languages covered', () => {
+  const all = enumerateLines();
+  assert.equal(new Set(all.map((l) => l.id)).size, all.length);
+  assert.ok(all.every((l) => l.text.length > 8 && !l.text.includes('{cat}')));
+  assert.ok(all.some((l) => l.id === 'en.friend.fold.1.podcast' && /your podcast list/.test(l.text)));
+  assert.ok(enumerateLines(['zh']).every((l) => l.lang === 'zh'));
+});

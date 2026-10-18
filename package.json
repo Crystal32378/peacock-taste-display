@@ -9,6 +9,8 @@
     "start": "node server.mjs",
     "dev": "PORT=8080 node server.mjs",
     "test": "node --test tests/*.test.mjs",
-    "qloo:smoke": "node scripts/qloo-smoke.mjs"
+    "qloo:smoke": "node scripts/qloo-smoke.mjs",
+    "voice": "node scripts/make-voice.mjs",
+    "voice:list": "node scripts/make-voice.mjs --list"
   }
 }

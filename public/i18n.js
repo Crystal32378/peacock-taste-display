@@ -160,3 +160,9 @@ export const UI = {
     alt: (n) => `${n}（虛構角色）`,
   },
 };
+
+// Every spoken line has a stable id so the recording script and the site agree on file names.
+// Lines containing {cat} get one file per feather type (…​.place, …​.podcast).
+export const lineId = (lang, mode, key, idx, type) => `${lang}.${mode}.${key}.${idx}${type ? '.' + type : ''}`;
+export const lineText = (head, body, catName) => `${head} ${body}`.replace('{cat}', catName);
+export const UI_SOUND = { en: (on) => `Sound: ${on ? 'on' : 'off'}`, zh: (on) => `聲音：${on ? '開' : '關'}` };

@@ -1,18 +1,24 @@
 import { buildFan } from './fan.js';
-import { COPY, UI } from './i18n.js';
+import { COPY, UI, UI_SOUND, lineId, lineText } from './i18n.js';
+import * as snd from './sound.js';
 
 const $ = (id) => document.getElementById(id);
 const MOODS = ['eager', 'stifled', 'unimpressed', 'ecstatic', 'sideeye', 'flustered', 'yawning', 'startled'];
 const heads = Object.fromEntries(MOODS.map((m) => [m, `assets/peacock-${m}.webp`]));
 
 let lastQuip = '';
-function quip(mode, key, cat) {
+function quip(mode, key, gapType) {
   const pool = COPY[st.lang][mode][key];
-  let pick;
-  for (let i = 0; i < 4; i++) { pick = pool[Math.floor(Math.random() * pool.length)]; if (pick[1] !== lastQuip) break; }
-  lastQuip = pick[1];
-  return [pick[0], pick[1].replace('{cat}', cat)];
+  let i = 0;
+  for (let n = 0; n < 4; n++) { i = Math.floor(Math.random() * pool.length); if (pool[i][1] !== lastQuip) break; }
+  const [head, body] = pool[i]; lastQuip = body;
+  const needsCat = body.includes('{cat}') || head.includes('{cat}');
+  const type = needsCat ? (gapType || 'movie') : '';
+  const cat = gapType ? catName(gapType) : T().cat;
+  return [head.replace('{cat}', cat), body.replace('{cat}', cat), lineId(st.lang, mode, key, i, type), lineText(head, body, cat)];
 }
+// show the caption and (if sound is on) let the peacock say it
+function speakCap(q) { cap(q[0], q[1]); snd.say(st.lang, q[2], q[3]); }
 const HEAD_FOR = { swoon: 'ecstatic', shiver: 'stifled', flicker: 'sideeye', fold: 'unimpressed' };
 
 const T = () => UI[st.lang];
@@ -58,6 +64,7 @@ function startGold(r) {
     out += `<g transform="translate(${(x + 6).toFixed(1)} ${(y + 4).toFixed(1)}) rotate(-16) scale(1.9)"><g class="kiss"><path d="${KISS_TOP}" fill="#F2D58A"/><path d="${KISS_BOT}" fill="#D9B35E"/><path d="M-9 -4C-4 -7 4 -7 9 -4" stroke="#FFF6D6" stroke-width="1.6" fill="none" stroke-linecap="round" opacity=".8"/></g></g>`;
   }
   $('gold').innerHTML = out;
+  snd.chime(); if (st.mode === 'lover') setTimeout(snd.pop, 800);
   el.classList.add('fav'); fan.classList.add('hasfav');
   $('capFav').textContent = T().fav(st.mode === 'lover', catName(fav.type), fav.item);
 }
@@ -118,7 +125,7 @@ async function play() {
   const r = await pending; if (id !== st.rid) return;
   st.current = r; applyResult(r);
   await sleep(350); if (id !== st.rid) return;
-  fan.classList.add('open'); setHead('eager');
+  fan.classList.add('open'); setHead('eager'); snd.rustle();
   await sleep(1900); if (id !== st.rid) return;
   const match = r.verdict === 'swoon' || r.verdict === 'shiver';
   const lover = st.mode === 'lover';
@@ -127,18 +134,18 @@ async function play() {
   st.streak = match ? 0 : st.streak + 1;
   // a category where YOU have taste and they have none: fodder for the peacock's attitude
   const gap = r.feathers.find((f) => f.state === 'none' && f.yours.length && !f.theirs.length) || r.feathers.find((f) => f.state === 'none' && f.yours.length);
-  const cat = gap ? catName(gap.type) : T().cat;
+  const gapType = gap ? gap.type : null;
   fan.classList.add('verdict');
   if (match && prev >= 2) {
     // after a losing streak the peacock does a double take before reacting
-    setHead('startled'); cap(...quip(st.mode, 'startle', cat));
+    setHead('startled'); speakCap(quip(st.mode, 'startle', gapType));
     await sleep(1700); if (id !== st.rid) return;
   }
   if (match && !reduce) fan.classList.add('match');
   startGold(r);
   const key = r.verdict === 'fold' && st.streak >= 3 ? 'eyeroll' : r.verdict === 'fold' && st.streak === 2 ? 'yawn' : r.verdict;
   setHead(key === 'eyeroll' ? 'sideeye' : key === 'yawn' ? 'yawning' : lover && r.verdict === 'swoon' ? 'flustered' : HEAD_FOR[r.verdict]);
-  cap(...quip(st.mode, key, cat));
+  speakCap(quip(st.mode, key, gapType));
   $('bridge').hidden = !(r.bridge && (r.verdict === 'fold' || r.verdict === 'flicker'));
   if (folded) {
     // no overlap worth a shiver: the peacock folds its tail, head stays, dry look
@@ -163,6 +170,7 @@ function showBridge() {
   fan.classList.add('open'); // the door needs the tail open again
   setHead(st.mode === 'lover' ? 'flustered' : 'startled');
   $('bridge').hidden = true;
+  snd.chime();
   cap(T().bridgeHead, b.kind === 'theirs' ? T().bridgeTheirs(cn, b.item, p.name) : T().bridgeQloo(cn, b.item));
 }
 
@@ -194,8 +202,9 @@ async function init() {
     $('replay').textContent = T().replay; $('next').textContent = T().next; $('bridge').textContent = T().bridge;
     $('sumText').textContent = T().summary; $('fict').textContent = T().fict; $('note').textContent = T().note;
     $('lEn').setAttribute('aria-pressed', st.lang === 'en'); $('lZh').setAttribute('aria-pressed', st.lang === 'zh');
-    setAuto();
+    setAuto(); $('snd').textContent = UI_SOUND[st.lang](snd.isOn()); $('snd').setAttribute('aria-pressed', snd.isOn());
   };
+  $('snd').onclick = () => { snd.setOn(!snd.isOn()); applyStatic(); if (snd.isOn()) snd.rustle(); };
   for (const [id, l] of [['lEn', 'en'], ['lZh', 'zh']]) $(id).onclick = () => {
     if (st.lang === l) return; st.lang = l; try { localStorage.setItem('td-lang', l); } catch {}
     applyStatic(); renderYou(); st.cache.clear(); play();
@@ -206,6 +215,6 @@ async function init() {
   const p = st.cast[0]; showProfile(p);
   const r = await display(p.id); st.current = r; applyResult(r);
   fan.classList.add('open', 'verdict'); if (r.verdict !== 'fold' && !reduce) fan.classList.add('match');
-  setHead(HEAD_FOR[r.verdict]); cap(...quip('friend', r.verdict, T().cat)); startGold(r);
+  setHead(HEAD_FOR[r.verdict]); cap(...quip('friend', r.verdict, null)); startGold(r);
 }
 init().catch((e) => { document.body.insertAdjacentHTML('beforeend', `<p style="padding:24px;color:#E2C783">${(UI[initialLang] || UI.en).err}${String(e.message || e)}</p>`); });
