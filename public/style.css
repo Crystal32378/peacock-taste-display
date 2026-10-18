@@ -127,10 +127,14 @@ pre{margin:12px 0 0;font:12px/1.7 ui-monospace,SFMono-Regular,Menlo,monospace;co
 /* the peacock's favourite feather: gold, with golden hearts (lover) or sparkles (friend) floating up */
 .fan.verdict .f.fav .halo{fill:#E2C783;opacity:.85}
 .fan.verdict ~ #labs .lab.fav .nm{fill:#F6DE9A;font-size:25px}
-#gold .gp{fill:#F2D58A;filter:drop-shadow(0 0 5px rgba(242,213,138,.9));opacity:0;transform:scale(.4);
+#gold .gp{fill:#FFE29A;filter:drop-shadow(0 0 5px rgba(242,213,138,.9));opacity:0;transform:scale(.4);
   animation:rise 2.8s ease-out var(--dl) infinite}
 @keyframes rise{0%{opacity:0;transform:translate(0,0) scale(calc(var(--sc) * .4))}18%{opacity:1}
   100%{opacity:0;transform:translate(var(--dx),-150px) scale(var(--sc))}}
 .cap .fav{margin:2px 0 0;font-family:var(--tc);font-weight:300;font-size:13px;letter-spacing:.08em;color:var(--gold-soft)}
 .cap .fav:empty{display:none}
 @media (prefers-reduced-motion:reduce){#gold .gp{animation:none;opacity:.8;transform:scale(var(--sc))}}
+
+.kiss{opacity:0;transform-box:fill-box;transform-origin:center;animation:stamp .7s cubic-bezier(.2,1.6,.4,1) .7s forwards;filter:drop-shadow(0 0 6px rgba(196,84,94,.55))}
+@keyframes stamp{0%{opacity:0;transform:scale(2.6) rotate(8deg)}55%{opacity:.98;transform:scale(.92)}100%{opacity:.9;transform:scale(1)}}
+@media (prefers-reduced-motion:reduce){.kiss{animation:none;opacity:.9}}

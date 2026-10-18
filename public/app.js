@@ -84,6 +84,8 @@ async function display(id) {
 
 const HEART = 'M0 4C-8-2-9-9-4-10C-1.5-10.5 0-8.5 0-7C0-8.5 1.5-10.5 4-10C9-9 8-2 0 4Z';
 const SPARK = 'M0-10C1 -3 3 -1 10 0C3 1 1 3 0 10C-1 3 -3 1 -10 0C-3 -1 -1 -3 0 -10Z';
+const KISS_TOP = 'M-22 0C-15-10-6-13 0-6C6-13 15-10 22 0C13 4-13 4-22 0Z';
+const KISS_BOT = 'M-22 0C-13 4 13 4 22 0C15 14 6 17 0 17C-6 17-15 14-22 0Z';
 function stopGold() { const g = $('gold'); if (g) g.innerHTML = ''; fan.classList.remove('hasfav'); $('capFav').textContent = ''; }
 function startGold(r) {
   stopGold();
@@ -94,8 +96,12 @@ function startGold(r) {
   const shape = st.mode === 'lover' ? HEART : SPARK;
   let out = '';
   for (let i = 0; i < 9; i++) {
-    const dx = (Math.random() - 0.5) * 150, dl = (i * 0.32).toFixed(2), sc = (1.6 + Math.random() * 1.2).toFixed(2);
+    const dx = (Math.random() - 0.5) * 150, dl = (i * 0.32).toFixed(2), sc = (2.2 + Math.random() * 1.4).toFixed(2);
     out += `<g transform="translate(${(x + (Math.random() - 0.5) * 50).toFixed(1)} ${y.toFixed(1)})"><path class="gp" d="${shape}" style="--dx:${dx.toFixed(0)}px;--dl:${dl}s;--sc:${sc}"/></g>`;
+  }
+  if (st.mode === 'lover') {
+    // the peacock stamps a kiss on its favourite feather
+    out += `<g transform="translate(${(x + 6).toFixed(1)} ${(y + 4).toFixed(1)}) rotate(-16) scale(1.9)"><g class="kiss"><path d="${KISS_TOP}" fill="#C4545E"/><path d="${KISS_BOT}" fill="#B3414F"/><path d="M-9 -4C-4 -7 4 -7 9 -4" stroke="#F3B6BC" stroke-width="1.6" fill="none" stroke-linecap="round" opacity=".7"/></g></g>`;
   }
   $('gold').innerHTML = out;
   el.classList.add('fav'); fan.classList.add('hasfav');

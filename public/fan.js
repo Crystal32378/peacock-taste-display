@@ -58,7 +58,7 @@ export function buildFan(feathers, headSrcs) {
   });
   const W = 360, hx = OX - 0.551 * W, hy = OY + 40 - W;
   const heads = Object.entries(headSrcs).map(([k, src]) => `<image class="head-img" data-mood="${k}" href="${src}" x="${f(hx)}" y="${f(hy)}" width="${W}" height="${W}"/>`).join('');
-  return `<svg id="svg" role="img" aria-label="孔雀開屏：十根羽毛各代表一種品味類別，與對方重疊的羽毛會抖動" viewBox="100 200 1240 730" preserveAspectRatio="xMidYMid meet">
+  return `<svg id="svg" role="img" aria-label="孔雀開屏：十根羽毛各代表一種品味類別，與對方重疊的羽毛會抖動" viewBox="40 200 1360 730" preserveAspectRatio="xMidYMid meet">
 <defs>
 <linearGradient id="bg" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="-560"><stop offset="0" stop-color="#8A8F4B"/><stop offset="0.3" stop-color="#6E9A52"/><stop offset="0.55" stop-color="#1F8F70"/><stop offset="0.8" stop-color="#1A7C8C"/><stop offset="1" stop-color="#B58B3C"/></linearGradient>
 <radialGradient id="eBronze" cx="0.4" cy="0.35" r="0.8"><stop offset="0" stop-color="#F0D794"/><stop offset="0.6" stop-color="#B98A3A"/><stop offset="1" stop-color="#6E4D1C"/></radialGradient>
