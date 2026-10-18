@@ -6,7 +6,7 @@
 //
 // NOTE for maintainers: the live request/response shapes below follow Qloo's
 // public hackathon examples (GET /search, GET /v2/insights). Qloo's docs were
-// not readable when this was written, so parsing is deliberately tolerant and
+// not readable when this was written (URNs, base URL, header and GET style were later checked against the official hackathon developer guide, 2026-10-18); response parsing is still deliberately tolerant and
 // `npm run qloo:smoke` prints the raw response to verify against reality.
 import { fixtureResolve, fixtureRelated } from '../data/fixtures.js';
 
@@ -21,7 +21,7 @@ export const URN = {
   place: 'urn:entity:place',
   destination: 'urn:entity:destination',
   podcast: 'urn:entity:podcast',
-  video_game: 'urn:entity:videogame',
+  video_game: 'urn:entity:video_game',
   brand: 'urn:entity:brand',
   person: 'urn:entity:person',
 };

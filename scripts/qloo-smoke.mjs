@@ -15,4 +15,4 @@ const search = await get('/search?query=' + encodeURIComponent('Brian Eno') + '&
 const id = search?.results?.[0]?.entity_id || search?.results?.[0]?.id || search?.results?.entities?.[0]?.entity_id;
 if (id) await get('/v2/insights?filter.type=' + encodeURIComponent('urn:entity:artist') + '&signal.interests.entities=' + encodeURIComponent(id) + '&take=5');
 else console.log('\nNo entity id found in the search response — send this output back so the parser can be adjusted.');
-await get('/search?query=' + encodeURIComponent('Hades') + '&types=' + encodeURIComponent('urn:entity:videogame') + '&take=1');
+await get('/search?query=' + encodeURIComponent('Hades') + '&types=' + encodeURIComponent('urn:entity:video_game') + '&take=1');
