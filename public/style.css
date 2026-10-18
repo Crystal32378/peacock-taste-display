@@ -35,7 +35,7 @@ button:hover:not(:disabled){background:var(--gold);color:var(--bg)}
 button:disabled{opacity:.35;cursor:default}
 button:focus-visible,summary:focus-visible{outline:2px solid var(--gold-soft);outline-offset:3px}
 .cast{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:22px}
-.cast button{width:48px;height:48px;padding:0;border-radius:50%;overflow:hidden;border:1px solid var(--line);opacity:.65}
+.cast button{width:48px;height:48px;padding:0;border-radius:50%;overflow:hidden;border:1px solid var(--line);opacity:.85}
 .cast button img{width:100%;height:100%;object-fit:cover;object-position:top}
 .cast button[aria-current=true]{border-color:var(--gold);opacity:1}
 details{margin-top:28px;border-top:1px solid var(--line);padding-top:14px;max-width:800px;margin-inline:auto}
@@ -89,7 +89,7 @@ pre{margin:12px 0 0;font:12px/1.7 ui-monospace,SFMono-Regular,Menlo,monospace;co
   .arch img{border-radius:48px 48px 2px 2px}
   .who h1{margin:0;font-size:34px}
   .who .blurb{margin:0;max-width:none}
-  .who .fict{display:none}
+  .who .fict{grid-column:1/-1;text-align:center;margin:8px 0 0}
 }
 @media (max-width:700px){
   /* narrow screens: only the feathers that lit up get a category name, so ten labels never crowd the fan */
@@ -100,7 +100,7 @@ pre{margin:12px 0 0;font:12px/1.7 ui-monospace,SFMono-Regular,Menlo,monospace;co
   html[data-lang=zh] .lab .nm{transform:translateY(10px)}
   .lab .nm{font-size:30px}
   .fan.verdict ~ #labs .lab.fav .nm{font-size:36px}
-  button{min-height:40px}
+  button{min-height:44px;min-width:44px}
 }
 /* top bar: wraps instead of pushing Friend/Lover off a phone screen */
 .top{flex-wrap:wrap;row-gap:10px}
@@ -165,5 +165,14 @@ html[data-lang=en] .who .blurb,html[data-lang=en] .note,html[data-lang=en] .engi
 .snd{padding:7px 12px;font-size:11px;letter-spacing:.16em}
 .snd[aria-pressed=true]{background:var(--gold);color:var(--bg)}
 @media (max-width:520px){.snd{padding:7px 8px;letter-spacing:.06em}}
+/* language is a quiet outlined switch; Friend/Lover is the filled one, so the two never read as the same control */
+.mode.lang button{border-color:var(--line);color:var(--dim)}
+.mode.lang button[aria-pressed=true]{background:transparent;color:var(--gold-soft);border-color:var(--gold)}
+.mode.lang button:hover:not(:disabled){background:transparent;color:var(--gold-soft)}
+.castHint{margin:20px 0 0;text-align:center;font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--dim)}
+.castHint + .cast{margin-top:10px}
+.cap .hits{margin:4px 0 0;max-width:42em;font-family:var(--ui);font-size:12px;letter-spacing:.02em;color:var(--dim);line-height:1.7}
+.cap .hits:empty{display:none}
+html:not([data-lang=en]) .cap .hits{font-family:var(--tc)}
 /* must come after the desktop rule above (same specificity): on phones the favourite feather is the biggest word */
 @media (max-width:700px){.fan.verdict ~ #labs .lab.fav .nm{font-size:36px}}

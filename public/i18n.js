@@ -5,7 +5,7 @@ export const COPY = {
   en: {
     friend: {
       swoon: [
-        ['The whole tail is humming.', 'Several feathers at once. The peacock would like it noted that this is unusual.'],
+        ['The whole tail is humming.', 'Several feathers at once. Unusual, the peacock would like it noted.'],
         ["Fine. I'm impressed.", 'It does not say that often. Do write it down.'],
         ['Oh, you have taste too.', 'How refreshing. The peacock had quite given up.'],
       ],
@@ -22,14 +22,14 @@ export const COPY = {
         ['Barely a rustle.', 'The tail considered opening, then remembered a prior engagement.'],
       ],
       fold: [
-        ['Not tonight.', "Not a single feather moved. It isn't you, dear. It's the tail. It has opinions."],
-        ['Nothing. Not one.', "The peacock isn't judging you. It's judging your {cat} list."],
+        ['Not tonight.', 'Not a single feather moved. The tail has opinions, and it is keeping them.'],
+        ['Nothing. Not one.', 'The peacock has read your {cat} list, and has no notes.'],
         ['I did check twice.', 'Twice, in fact. The result was the same. Another time, perhaps.'],
         ['The tail has closed.', "Filed under 'another time'. In rather small print."],
       ],
       yawn: [['…again?', 'Nothing moved. The peacock yawns, openly, in your direction.'], ['Forgive me.', 'Nothing moved, again. The peacock stifles a yawn, and fails.']],
       eyeroll: [['I am being very patient.', 'Several in a row now. The peacock rolls its eyes. Not at you. At the evening.'], ['Truly.', 'Another fold. The peacock studies the ceiling, which is at least consistent.']],
-      startle: [['…Wait.', 'A moment ago it was yawning. This one is different.']],
+      startle: [['…Wait.', 'A moment ago it was yawning. This one is different.'], ['Hm?', 'Something moved. The peacock sits up and denies having been asleep.']],
     },
     lover: {
       swoon: [
@@ -40,7 +40,7 @@ export const COPY = {
       shiver: [
         ["Careful. It's trying not to look.", 'That tremble is unmistakable. The peacock pretends to tidy a feather.'],
         ["It isn't a reaction.", 'The peacock insists it is a muscle spasm. Nobody believes it.'],
-        ['Stop smiling.', 'It is visibly trembling and would like you to stop smiling.'],
+        ['Stop smiling.', 'It is visibly trembling, and you are smiling. Stop it.'],
       ],
       flicker: [
         ['A flicker, and a sideways look.', 'One feather moved. The peacock glanced at you and said nothing.'],
@@ -50,12 +50,12 @@ export const COPY = {
       ],
       fold: [
         ['Not tonight.', 'Nothing moved. The tail has folded. This is about feathers, not about you.'],
-        ['Nothing to see here.', "The peacock isn't judging you. It's judging your {cat} list."],
+        ['Nothing to see here.', 'The peacock has read your {cat} list, and is keeping its thoughts to itself.'],
         ['The tail has opinions.', 'Folded. The peacock has standards and has declined to explain them.'],
       ],
       yawn: [['…again?', 'Nothing moved. The peacock yawns, and consults a watch it does not own.'], ['Forgive me.', 'Nothing moved, again. The peacock hides a yawn behind a feather. Poorly.']],
       eyeroll: [['I am being very patient.', 'Several in a row now. The peacock rolls its eyes. Not at you. At the evening.'], ['Truly.', 'Another fold. The peacock studies the ceiling, which is at least consistent.']],
-      startle: [['…Wait.', 'A moment ago it was yawning. This one is different.']],
+      startle: [['…Wait.', 'A moment ago it was yawning. This one is different.'], ['Oh.', 'The peacock had stopped expecting anything. It is now pretending it never did.']],
     },
   },
   zh: {
@@ -67,7 +67,7 @@ export const COPY = {
       ],
       shiver: [
         ['Something is stirring.', '有羽毛對上了，尾巴自己抖了起來，孔雀努力裝沒事。'],
-        ['I am not shaking. You are.', '尾巴抖成這樣，孔雀堅持說是風。'],
+        ['I am not shaking. You are.', '尾巴抖成這樣，孔雀堅持說抖的是你，頂多再加一點風。'],
         ['Do not read into this.', '只是幾根羽毛的反射動作，不代表孔雀認同任何事。'],
       ],
       flicker: [
@@ -79,13 +79,13 @@ export const COPY = {
       ],
       fold: [
         ['Not tonight.', '一根都沒動。孔雀收屏。不是你不好，是尾巴今天沒心情。'],
-        ['Nothing. Not one.', '孔雀不是針對你，孔雀是針對你的{cat}清單。'],
+        ['Nothing. Not one.', '孔雀看過你的{cat}清單了，沒有意見。'],
         ['I checked twice.', '孔雀認真比對了兩次，結果和第一次一樣。禮貌地說：改天。'],
         ['The tail has folded.', '收屏了。孔雀會把這次寫進「改天」，字很小。'],
       ],
       yawn: [['…again?', '又一根都沒動。孔雀打了個哈欠，當著你的面。'], ['Forgive me.', '又是一根都沒動。孔雀想忍住哈欠，沒忍住。']],
       eyeroll: [['I am being very patient.', '連續好幾位都沒動，孔雀開始翻白眼。這不是對你，是對今天的尾巴運氣。'], ['Truly.', '又收屏了。孔雀研究起天花板，至少天花板很一致。']],
-      startle: [['…Wait.', '孔雀剛剛還在打哈欠。等一下，這個不一樣。']],
+      startle: [['…Wait.', '孔雀剛剛還在打哈欠。等一下，這個不一樣。'], ['Hm?', '有東西動了。孔雀坐直了身子，否認自己剛才睡著了。']],
     },
     lover: {
       swoon: [
@@ -106,12 +106,12 @@ export const COPY = {
       ],
       fold: [
         ['Not tonight.', '一根都沒動。孔雀收屏。尾巴的事，跟你這個人沒關係。'],
-        ['Nothing to see here.', '孔雀不是針對你，孔雀是針對你的{cat}清單。'],
+        ['Nothing to see here.', '孔雀看過你的{cat}清單了，決定把想法留給自己。'],
         ['The tail has opinions.', '收屏了。孔雀有牠的標準，而牠今天沒有想解釋。'],
       ],
       yawn: [['…again?', '又一根都沒動。孔雀打了個哈欠，低頭看了看手腕，牠根本沒戴錶。'], ['Forgive me.', '又是一根都沒動。孔雀用羽毛擋住哈欠，擋得很差。']],
       eyeroll: [['I am being very patient.', '連續好幾位都沒動，孔雀翻了白眼。這不是對你，是對今天的運氣。'], ['Truly.', '又收屏了。孔雀研究起天花板，至少天花板很一致。']],
-      startle: [['…Wait.', '孔雀剛剛還在打哈欠。等一下，這個不一樣。']],
+      startle: [['…Wait.', '孔雀剛剛還在打哈欠。等一下，這個不一樣。'], ['Oh.', '孔雀早就不抱期待了，現在正假裝自己從來沒有期待過。']],
     },
   },
 };
@@ -127,7 +127,8 @@ export const UI = {
     auto: (on) => `Auto-play: ${on ? 'on' : 'off'}`,
     fict: 'Fictional characters · 18+ · nobody is contacted',
     summary: 'Under the hood: Qloo call log',
-    setup: 'You are the visitor, with a demo taste of your own (below). Pick a character and the peacock compares your ten feathers with theirs. Gold names are where you meet; dim feathers did not.',
+    setup: 'You are the visitor, with a demo taste of your own (below). Pick a character and the peacock reads your ten feathers against theirs. Friend teases; Lover blushes. Gold names are where you meet; dim feathers did not. If nothing meets, it may whisper a door.',
+    hits: 'Where you meet: ', pick: 'Meet someone else',
     note: 'No compatibility score exists between two people. The peacock only looks at which feathers meet, and never judges the person. Affinity appears only on single items. Every character is a fictional adult.',
     opening: (name) => ['Opening…', `The peacock is comparing your ten feathers with ${name}'s.`],
     cat: 'taste',
@@ -154,12 +155,13 @@ export const UI = {
     auto: (on) => `自動播放：${on ? '開' : '關'}`,
     fict: '虛構角色 · 18+ · 沒有人會被聯絡',
     summary: '背後怎麼算的：Qloo 呼叫紀錄',
-    setup: '你是來訪的人，帶著一組示範用的品味（見下方）。選一位角色，孔雀會拿你的十根羽毛和對方的比對。金色名字是你們相遇的地方，暗的羽毛沒對上。',
+    setup: '你是來訪的人，帶著一組示範用的品味（見下方）。選一位角色，孔雀會拿你的十根羽毛和對方的比對。Friend 是損友，Lover 是會臉紅的那種。金色名字是你們相遇的地方，暗的羽毛沒對上；一根都沒對上時，孔雀可能會悄悄指一扇門。',
+    hits: '你們相遇的地方：', pick: '換一位來看看',
     note: '兩個人之間不給總分：孔雀只看哪幾根羽毛對上，從不評斷這個人。親和度數字只會出現在單一項目上。人物皆為虛構成年角色。',
     opening: (name) => ['Opening…', `孔雀正在拿你的十根羽毛，和${name}的比對。`],
     cat: '品味',
     fav: (heart, t, item) => `${heart ? '♥' : '✦'} 孔雀偏心「${t}」這一根：${item}`,
-    bridgeHead: 'But here is a door.',
+    bridgeHead: '但這裡有一扇門。',
     bridgeTheirs: (cat, item, name) => `「${cat}」這根沒對上，不過你可能會喜歡 ${item}，那剛好是 ${name} 的${cat}。`,
     bridgeQloo: (cat, item) => `「${cat}」這根沒對上。Qloo 倒是推薦你可以試試 ${item}。`,
     bridgeDemo: (cat, item) => `「${cat}」這根沒對上。孔雀（示範資料，尚未接 Qloo）倒是建議你試試 ${item}。`,

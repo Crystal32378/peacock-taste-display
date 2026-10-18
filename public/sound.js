@@ -71,12 +71,15 @@ function browserVoice(text, lang) {
 
 // id: stable line id; text: what to say if no recording exists.
 // Only English has recordings (the British voice); the 中 side uses the browser's own voice without a pointless 404.
-export function say(lang, id, text) {
+export function say(lang, id, text, delay = 0) {
   if (!on) return; stopVoice();
-  fin = () => {};
-  if (window.__NOAUDIO || lang !== 'en') return browserVoice(text, lang);
-  const a = new Audio(`audio/${lang}/${id}.mp3`); audio = a;
-  a.onended = () => { if (audio === a) { audio = null; settle(); } };
-  a.onerror = () => { if (audio === a) { audio = null; browserVoice(text, lang); } };
-  a.play().catch(() => { if (audio === a) { audio = null; browserVoice(text, lang); } });
+  fin = () => {}; // "in flight" starts now, even if the voice itself starts after `delay`
+  const go = () => {
+    if (window.__NOAUDIO || lang !== 'en') return browserVoice(text, lang);
+    const a = new Audio(`audio/${lang}/${id}.mp3`); audio = a;
+    a.onended = () => { if (audio === a) { audio = null; settle(); } };
+    a.onerror = () => { if (audio === a) { audio = null; browserVoice(text, lang); } };
+    a.play().catch(() => { if (audio === a) { audio = null; browserVoice(text, lang); } });
+  };
+  if (delay) speakT = setTimeout(go, delay); else go();
 }

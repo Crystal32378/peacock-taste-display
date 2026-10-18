@@ -18,7 +18,7 @@ function quip(mode, key, gapType) {
   return [head.replace('{cat}', cat), body.replace('{cat}', cat), lineId(st.lang, mode, key, i, type), lineText(head, body, cat)];
 }
 // show the caption and (if sound is on) let the peacock say it
-function speakCap(q) { cap(q[0], q[1]); snd.say(st.lang, q[2], q[3]); }
+function speakCap(q, delay = 0) { cap(q[0], q[1]); snd.say(st.lang, q[2], q[3], delay); }
 const LIGHT = new Set(['movie', 'tv_show', 'place', 'destination', 'brand', 'podcast']);
 const HEAD_FOR = { swoon: 'ecstatic', shiver: 'stifled', flicker: 'sideeye', fold: 'unimpressed' };
 
@@ -95,6 +95,9 @@ function applyResult(r) {
     el.querySelector('.nm').textContent = f ? describe(f) : '';
   });
   fan.classList.toggle('swoon', r.verdict === 'swoon');
+  // the same matches as plain readable text: on a phone the names on the feathers are tiny
+  const hits = r.feathers.filter((f) => f.state !== 'none').map((f) => `${catName(f.type)} ${f.state === 'neighbor' ? '≈ ' : ''}${f.item}`);
+  $('hits').textContent = hits.length ? T().hits + hits.join(' · ') : '';
   feathers.forEach((el) => el.classList.remove('fav'));
   labs.forEach((el) => el.classList.toggle('fav', !!r.favorite && el.dataset.type === r.favorite.type));
   renderTrace(r);
@@ -119,7 +122,7 @@ async function play() {
   snd.stopVoice(); // the previous character's line must not talk over this one
   fan.classList.remove('match', 'verdict', 'swoon'); $('bridge').hidden = true; stopGold();
   // wipe the previous verdict at once, so a new face never wears the last one's caption or gold names
-  cap('', '');
+  cap('', ''); $('hits').textContent = '';
   feathers.forEach((el) => el.classList.remove('res', 'bridge', 'fav'));
   labs.forEach((el) => { el.classList.remove('res', 'bridge', 'fav'); el.querySelector('.nm').textContent = ''; });
   setHead('eager');
@@ -137,8 +140,12 @@ async function play() {
   const lover = st.mode === 'lover';
   // only a true fold closes the tail. A flicker means something did meet, so the lit feather stays lit.
   const folded = r.verdict === 'fold';
+  // losing streak = consecutive folds. A flicker is neutral (something did meet); a match resets it.
+  // Replaying the same character is not a new loss, and the streak is reset when mode or language changes.
+  if (st.lastId === p.id) st.streak = st.streakBefore;
+  st.lastId = p.id; st.streakBefore = st.streak;
   const prev = st.streak;
-  st.streak = match ? 0 : st.streak + 1;
+  st.streak = match ? 0 : r.verdict === 'flicker' ? st.streak : st.streak + 1;
   // a category where YOU have taste and they have none: fodder for the peacock's attitude.
   // Only light-hearted categories are teased ("your podcast list"), never someone's books or games.
   const gap = r.feathers.find((f) => LIGHT.has(f.type) && f.state === 'none' && f.yours.length && !f.theirs.length) || r.feathers.find((f) => LIGHT.has(f.type) && f.state === 'none' && f.yours.length);
@@ -151,13 +158,14 @@ async function play() {
   }
   if (match && !reduce) fan.classList.add('match');
   startGold(r);
-  const key = r.verdict === 'fold' && st.streak >= 3 ? 'eyeroll' : r.verdict === 'fold' && st.streak === 2 ? 'yawn' : r.verdict;
+  // second fold in a row yawns, third rolls its eyes; later folds go back to the ordinary pool (no lock-in)
+  const key = r.verdict === 'fold' && st.streak === 3 ? 'eyeroll' : r.verdict === 'fold' && st.streak === 2 ? 'yawn' : r.verdict;
   setHead(key === 'eyeroll' ? 'sideeye' : key === 'yawn' ? 'yawning' : lover && r.verdict === 'swoon' ? 'flustered' : HEAD_FOR[r.verdict]);
-  speakCap(quip(st.mode, key, gapType));
+  speakCap(quip(st.mode, key, gapType), 650); // let the gold chime land first so it does not bury the voice
   $('bridge').hidden = !(r.bridge && (r.verdict === 'fold' || r.verdict === 'flicker'));
   if (folded) {
     // no overlap worth a shiver: the peacock folds its tail, head stays, dry look
-    await sleep(2200); if (id !== st.rid) return;
+    await Promise.all([sleep(2200), snd.whenDone(6500)]); if (id !== st.rid) return; // the tail closes when the line ends, not before
     fan.classList.remove('open', 'match'); stopGold();
   }
   if (!st.auto) return;
@@ -201,20 +209,20 @@ async function init() {
   const setAuto = () => { $('auto').textContent = T().auto(st.auto); $('auto').setAttribute('aria-pressed', st.auto); };
   $('auto').onclick = () => { st.auto = !st.auto; setAuto(); if (st.auto && fan.classList.contains('verdict')) { const id = st.rid; st.timer = setTimeout(() => id === st.rid && next(), 1500); } };
   for (const m of ['friend', 'lover']) $(m === 'friend' ? 'mFriend' : 'mLover').onclick = () => {
-    st.mode = m; $('mFriend').setAttribute('aria-pressed', m === 'friend'); $('mLover').setAttribute('aria-pressed', m === 'lover'); play();
+    st.mode = m; st.streak = 0; st.lastId = null; $('mFriend').setAttribute('aria-pressed', m === 'friend'); $('mLover').setAttribute('aria-pressed', m === 'lover'); play();
   };
   const applyStatic = () => {
     document.documentElement.lang = st.lang === 'en' ? 'en' : 'zh-Hant';
     document.documentElement.dataset.lang = st.lang;
     document.title = T().title;
     $('replay').textContent = T().replay; $('next').textContent = T().next; $('bridge').textContent = T().bridge;
-    $('sumText').textContent = T().summary; $('setup').textContent = T().setup; $('fict').textContent = T().fict; $('note').textContent = T().note;
+    $('sumText').textContent = T().summary; $('setup').textContent = T().setup; $('castHint').textContent = T().pick; $('fict').textContent = T().fict; $('note').textContent = T().note;
     $('lEn').setAttribute('aria-pressed', st.lang === 'en'); $('lZh').setAttribute('aria-pressed', st.lang === 'zh');
     setAuto(); $('snd').textContent = UI_SOUND[st.lang](snd.isOn()); $('snd').setAttribute('aria-pressed', snd.isOn());
   };
   $('snd').onclick = () => { snd.setOn(!snd.isOn()); applyStatic(); if (snd.isOn()) snd.rustle(); };
   for (const [id, l] of [['lEn', 'en'], ['lZh', 'zh']]) $(id).onclick = () => {
-    if (st.lang === l) return; st.lang = l; try { localStorage.setItem('td-lang', l); } catch {}
+    if (st.lang === l) return; st.lang = l; st.streak = 0; st.lastId = null; try { localStorage.setItem('td-lang', l); } catch {}
     applyStatic(); renderYou(); st.cache.clear(); play();
   };
   applyStatic();

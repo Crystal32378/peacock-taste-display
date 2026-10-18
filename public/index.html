@@ -13,7 +13,7 @@
 </head>
 <body>
 <div class="wrap">
-  <div class="top"><span>Taste Display</span><span class="no">N° 001</span>
+  <div class="top"><span>Taste Display</span>
     <span class="right"><button type="button" id="snd" class="snd" aria-pressed="false">Sound: off</button><span class="mode lang" role="group" aria-label="Language"><button type="button" id="lEn" aria-pressed="true">EN</button><button type="button" id="lZh" aria-pressed="false">中</button></span><span class="mode" role="group" aria-label="Intent"><button type="button" id="mFriend" aria-pressed="true">Friend</button><button type="button" id="mLover" aria-pressed="false">Lover</button></span></span>
   </div>
   <p class="setup" id="setup"></p>
@@ -27,13 +27,14 @@
     </div>
     <div id="stageSvg"></div>
   </div>
-  <div class="cap" aria-live="polite"><p class="en" id="capEn"></p><p class="zh" id="capZh"></p><p class="fav" id="capFav"></p></div>
+  <div class="cap" aria-live="polite"><p class="en" id="capEn"></p><p class="zh" id="capZh"></p><p class="fav" id="capFav"></p><p class="hits" id="hits"></p></div>
   <div class="ctl">
     <button type="button" id="replay">Replay</button>
     <button type="button" id="bridge" hidden></button>
     <button type="button" id="next">Next</button>
     <button type="button" id="auto" aria-pressed="false">Auto-play: off</button>
   </div>
+  <p class="castHint" id="castHint">Meet someone else</p>
   <div class="cast" id="castRow" aria-label="Choose a character"></div>
   <p class="you" id="you"></p>
   <details>
