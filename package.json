@@ -1,0 +1,14 @@
+{
+  "name": "taste-display",
+  "version": "0.1.0",
+  "description": "Taste Display (開屏) — a peacock opens its tail; the feathers that match your taste shiver. Ten feathers, ten Qloo entity types, no compatibility score.",
+  "license": "MIT",
+  "type": "module",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "start": "node server.mjs",
+    "dev": "PORT=8080 node server.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "qloo:smoke": "node scripts/qloo-smoke.mjs"
+  }
+}
