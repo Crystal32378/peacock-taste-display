@@ -68,9 +68,15 @@ export async function compare(viewer, profile, qloo) {
   let bridge = null;
   if (verdict === 'flicker' || verdict === 'fold') bridge = await findBridge(yoursAll, theirsAll, feathers, qloo, trace);
 
+  // The peacock's favourite: the single strongest link. An identical item beats any neighbour;
+  // among neighbours, the one with the highest per-item affinity. Never summed, never shown as a number.
+  const strength = (f) => (f.state === 'same' ? 2 : (f.affinity ?? 0.5));
+  const lit = feathers.filter((f) => f.state !== 'none').sort((a, b) => strength(b) - strength(a));
+  const favorite = lit.length ? { type: lit[0].type, item: lit[0].item, kind: lit[0].state } : null;
+
   const sources = new Set(trace.map((t) => t.source === 'cache' ? null : t.source).filter(Boolean));
   const engine = sources.size === 0 ? (qloo.mode()) : sources.size === 1 ? [...sources][0] : 'mixed';
-  return { profileId: profile.id, viewerId: viewer.id || 'you', engine, mode: qloo.mode(), feathers, resonant, verdict, bridge, trace };
+  return { profileId: profile.id, viewerId: viewer.id || 'you', engine, mode: qloo.mode(), feathers, resonant, verdict, favorite, bridge, trace };
 }
 
 // "You and they don't meet on this feather — but here is a door."

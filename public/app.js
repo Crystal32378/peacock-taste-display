@@ -82,6 +82,26 @@ async function display(id) {
   return st.cache.get(key);
 }
 
+const HEART = 'M0 4C-8-2-9-9-4-10C-1.5-10.5 0-8.5 0-7C0-8.5 1.5-10.5 4-10C9-9 8-2 0 4Z';
+const SPARK = 'M0-10C1 -3 3 -1 10 0C3 1 1 3 0 10C-1 3 -3 1 -10 0C-3 -1 -1 -3 0 -10Z';
+function stopGold() { const g = $('gold'); if (g) g.innerHTML = ''; fan.classList.remove('hasfav'); $('capFav').textContent = ''; }
+function startGold(r) {
+  stopGold();
+  const fav = r.favorite; if (!fav) return;
+  const el = feathers.find((e) => e.dataset.type === fav.type); if (!el) return;
+  const a = parseFloat(el.style.getPropertyValue('--a')) * Math.PI / 180, d = 0.8 * 545;
+  const x = 720 + d * Math.sin(a), y = 880 - d * Math.cos(a);
+  const shape = st.mode === 'lover' ? HEART : SPARK;
+  let out = '';
+  for (let i = 0; i < 9; i++) {
+    const dx = (Math.random() - 0.5) * 150, dl = (i * 0.32).toFixed(2), sc = (1.6 + Math.random() * 1.2).toFixed(2);
+    out += `<g transform="translate(${(x + (Math.random() - 0.5) * 50).toFixed(1)} ${y.toFixed(1)})"><path class="gp" d="${shape}" style="--dx:${dx.toFixed(0)}px;--dl:${dl}s;--sc:${sc}"/></g>`;
+  }
+  $('gold').innerHTML = out;
+  el.classList.add('fav'); fan.classList.add('hasfav');
+  const t = label(fav.type);
+  $('capFav').textContent = (st.mode === 'lover' ? '♥ ' : '✦ ') + `孔雀偏心「${t.zh}」這一根：${fav.item}`;
+}
 function setHead(mood) {
   $('head').setAttribute('class', mood ? 'mood-' + mood : ''); headEls.forEach((el) => el.classList.toggle('on', el.dataset.mood === mood)); }
 function cap(en, zh) { $('capEn').textContent = en; $('capZh').textContent = zh; }
@@ -108,6 +128,8 @@ function applyResult(r) {
     el.querySelector('.nm').textContent = f ? describe(f) : '';
   });
   fan.classList.toggle('swoon', r.verdict === 'swoon');
+  feathers.forEach((el) => el.classList.remove('fav'));
+  labs.forEach((el) => el.classList.toggle('fav', !!r.favorite && el.dataset.type === r.favorite.type));
   renderTrace(r);
 }
 
@@ -127,7 +149,7 @@ function renderYou() {
 async function play() {
   const id = ++st.rid, p = st.cast[st.idx];
   clearTimeout(st.timer);
-  fan.classList.remove('match', 'verdict', 'swoon'); $('bridge').hidden = true;
+  fan.classList.remove('match', 'verdict', 'swoon'); $('bridge').hidden = true; stopGold();
   setHead('eager');
   showProfile(p);
   const pending = display(p.id);
@@ -154,6 +176,7 @@ async function play() {
     await sleep(1700); if (id !== st.rid) return;
   }
   if (match && !reduce) fan.classList.add('match');
+  startGold(r);
   const key = r.verdict === 'fold' && st.streak >= 3 ? 'eyeroll' : r.verdict === 'fold' && st.streak === 2 ? 'yawn' : r.verdict;
   setHead(key === 'eyeroll' ? 'sideeye' : key === 'yawn' ? 'yawning' : lover && r.verdict === 'swoon' ? 'flustered' : HEAD_FOR[r.verdict]);
   cap(...quip(st.mode, key, cat));
@@ -161,7 +184,7 @@ async function play() {
   if (folded) {
     // no overlap worth a shiver: the peacock folds its tail, head stays, dry look
     await sleep(r.verdict === 'flicker' ? 2600 : 2200); if (id !== st.rid) return;
-    fan.classList.remove('open', 'match');
+    fan.classList.remove('open', 'match'); stopGold();
   }
   if (!st.auto) return;
   await sleep(match ? 4800 : 1800); if (id !== st.rid) return;
@@ -177,6 +200,7 @@ function showBridge() {
     if (on) el.querySelector('.nm').textContent = `→ ${b.item}`;
   });
   const p = st.cast[st.idx];
+  stopGold();
   fan.classList.add('open'); // the door needs the tail open again
   setHead(st.mode === 'lover' ? 'flustered' : 'startled');
   $('bridge').hidden = true;
@@ -192,6 +216,7 @@ async function init() {
   st.cast = data.cast; st.labels = data.labels; st.viewer = data.viewer;
   const order = data.feathers.map((t) => ({ type: t, en: label(t).en, zh: label(t).zh }));
   $('stageSvg').innerHTML = buildFan(order, heads);
+  $('svg').insertAdjacentHTML('beforeend', '<g id="gold"></g>');
   fan = $('fan'); feathers = [...fan.querySelectorAll('.f.m')]; labs = [...document.querySelectorAll('.lab')]; headEls = [...document.querySelectorAll('.head-img')];
   $('castRow').innerHTML = st.cast.map((p) => `<button type="button" data-id="${p.id}" aria-label="${p.name}"><img src="assets/${p.portrait}" alt="" loading="lazy"></button>`).join('');
   $('castRow').addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; st.idx = st.cast.findIndex((p) => p.id === b.dataset.id); play(); });
@@ -211,6 +236,6 @@ async function init() {
   const p = st.cast[0]; showProfile(p);
   const r = await display(p.id); st.current = r; applyResult(r);
   fan.classList.add('open', 'verdict'); if (r.verdict !== 'fold' && !reduce) fan.classList.add('match');
-  setHead(HEAD_FOR[r.verdict]); cap(...quip('friend', r.verdict, '品味'));
+  setHead(HEAD_FOR[r.verdict]); cap(...quip('friend', r.verdict, '品味')); startGold(r);
 }
 init().catch((e) => { document.body.insertAdjacentHTML('beforeend', `<p style="padding:24px;color:#E2C783">孔雀暫時出不來：${String(e.message || e)}</p>`); });

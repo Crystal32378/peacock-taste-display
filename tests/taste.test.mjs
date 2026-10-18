@@ -83,3 +83,13 @@ test('extractEntities tolerates both envelope shapes', () => {
   assert.equal(extractEntities({ results: { entities: [{ entity_id: 'b', name: 'B' }] } })[0].id, 'b');
   assert.deepEqual(extractEntities({}), []);
 });
+
+test('favorite: an identical item beats a neighbour; folded tails have none', async () => {
+  const mira = await run('mira');
+  assert.equal(mira.favorite.kind, 'same');
+  const ren = await run('ren');
+  assert.equal(ren.favorite.kind, 'neighbor');
+  assert.ok(!('affinity' in ren.favorite));
+  const theo = await run('theo');
+  assert.ok(theo.favorite === null || theo.favorite.kind === 'neighbor');
+});
