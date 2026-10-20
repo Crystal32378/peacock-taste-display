@@ -37,7 +37,7 @@ npm start         # http://localhost:8080
 |---|---|---|
 | `live` | `QLOO_API_KEY` is set | "Qloo 即時 API" |
 | `fixture` | no key | "離線示範資料 (fixture)" — hand-written neighbors, **not Qloo output** |
-| `fallback` | live call failed | per-call trace marks `fallback` with the error |
+| live, one call failed | Qloo rejected or timed out on a call | that call is left empty and marked `error` with Qloo's reply; demo data is never mixed into live results |
 
 The Qloo call trace is shown in the page (「Qloo 呼叫紀錄」), so a judge can see exactly which calls were real.
 

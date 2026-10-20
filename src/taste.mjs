@@ -74,9 +74,9 @@ export async function compare(viewer, profile, qloo) {
   const lit = feathers.filter((f) => f.state !== 'none').sort((a, b) => strength(b) - strength(a));
   const favorite = lit.length ? { type: lit[0].type, item: lit[0].item, kind: lit[0].state } : null;
 
-  const sources = new Set(trace.map((t) => t.source === 'cache' ? null : t.source).filter(Boolean));
+  const sources = new Set(trace.map((t) => (t.source === 'cache' || t.source === 'error') ? null : t.source).filter(Boolean));
   const engine = sources.size === 0 ? (qloo.mode()) : sources.size === 1 ? [...sources][0] : 'mixed';
-  return { profileId: profile.id, viewerId: viewer.id || 'you', engine, mode: qloo.mode(), feathers, resonant, verdict, favorite, bridge, trace };
+  return { profileId: profile.id, viewerId: viewer.id || 'you', engine, mode: qloo.mode(), feathers, resonant, verdict, favorite, bridge, errors: trace.filter((t) => t.source === 'error').length, trace };
 }
 
 // "You and they don't meet on this feather — but here is a door."
@@ -91,12 +91,15 @@ async function findBridge(yoursAll, theirsAll, feathers, qloo, trace) {
   for (const t of signalTypes) {
     const r = await qloo.resolve(t, yoursAll[t][0]);
     trace.push(r.trace);
-    if (r.value) signals.push({ name: yoursAll[t][0], id: r.value.id });
+    if (r.value) signals.push({ type: t, name: yoursAll[t][0], id: r.value.id });
   }
   if (!signals.length) return null;
 
   const tried = await Promise.all(candidates.map(async (type) => {
-    const rel = await qloo.related(type, signals.map((s) => s.id), signals.map((s) => s.name));
+    // Qloo rejects place/destination signals when asking for people, so leave those out there.
+    const sig = type === 'person' ? signals.filter((s) => s.type !== 'place' && s.type !== 'destination') : signals;
+    if (!sig.length) return { type, results: [], match: null, shared: null };
+    const rel = await qloo.related(type, sig.map((s) => s.id), sig.map((s) => s.name));
     trace.push(rel.trace);
     const th = await resolveAll(qloo, type, theirsAll[type], trace);
     // A door both of you can walk through: recommended from YOUR taste and also from THEIRS in this category.

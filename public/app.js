@@ -109,6 +109,7 @@ function renderTrace(r) {
   $('engine').innerHTML = r.engine === 'live' ? E.live
     : r.engine === 'fixture' ? E.fixture + (r.mode === 'fixture' ? E.fixtureNote : '')
     : r.engine === 'fallback' ? E.fallback : E.mixed;
+  if (r.errors) $('engine').innerHTML += ' ' + E.errors(r.errors);
   $('trace').textContent = r.trace.map((t) => `[${t.source}${t.ms != null ? ' ' + t.ms + 'ms' : ''}] ${decodeURIComponent(t.call)}${t.error ? '  !! ' + t.error : ''}`).join('\n') || T().noCalls;
 }
 

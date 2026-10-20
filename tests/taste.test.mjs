@@ -71,10 +71,10 @@ test('live mode: sends X-Api-Key, parses results, labels source live', async () 
   assert.match(seen[1].url, /filter\.type=urn%3Aentity%3Aartist/);
 });
 
-test('live failure falls back to fixture and says so', async () => {
+test('live failure leaves the call empty and says so (no demo data mixed in)', async () => {
   const q = createQloo({ apiKey: 'k_test', fetchImpl: async () => ({ ok: false, status: 500 }) });
   const r = await q.resolve('artist', 'Brian Eno');
-  assert.equal(r.trace.source, 'fallback');
+  assert.equal(r.trace.source, 'error'); assert.equal(r.value, null);
   assert.match(r.trace.error, /500/);
 });
 
@@ -87,7 +87,7 @@ test('429 is retried then succeeds; 400 carries the reply text from Qloo', async
   assert.equal(r.trace.source, 'live'); assert.equal(r.value.id, 'E1'); assert.equal(n, 3);
   const q2 = createQloo({ apiKey: 'k_test', gapMs: 0, fetchImpl: async () => ({ ok: false, status: 400, text: async () => 'bad type urn:x' }) });
   const r2 = await q2.resolve('video_game', 'Hades');
-  assert.equal(r2.trace.source, 'fallback'); assert.match(r2.trace.error, /400: bad type/);
+  assert.equal(r2.trace.source, 'error'); assert.match(r2.trace.error, /400: bad type/);
 });
 
 test('games use urn:entity:videogame on both endpoints (the live API rejects video_game)', async () => {
