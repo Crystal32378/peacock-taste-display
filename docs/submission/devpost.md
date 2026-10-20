@@ -18,9 +18,9 @@ It has a Friend mode (teases) and a Lover mode (blushes), English and Traditiona
 ## Technological implementation (how we use Qloo)
 Qloo does the part exact matching cannot.
 
-1. **Search** (`/search`) resolves every item to a Qloo entity of the right type.
+1. **Search** (`/search`) resolves items to Qloo entities of the right type. Items that are exactly the same on both sides match directly and need no call.
 2. **Insights** (`/v2/insights`), seeded with your items of one type, returns what lives in the same taste neighbourhood. If the character's item is in that list, the feather is a **neighbour** match (≈). Identical items are a **same** match (=).
-3. **Doors:** when a tail folds, we ask Qloo what you might love in a category where the other person has taste. If the same item is also recommended from the character's own items, the door says it is shared; otherwise it is a recommendation from your taste alone, and the page says so.
+3. **Doors:** when a tail folds, we ask Qloo what you might love in a category where the other person has taste. A door comes from one of three sources, and the page says which: an item the other person already has that Qloo recommends from your taste; an item Qloo recommends from both your items and theirs (shared); or, failing both, a recommendation from your taste alone.
 
 Engineering that matters in practice:
 - A request queue with retry and back-off for Qloo's rate limits, and a six-hour private cache.
@@ -28,10 +28,10 @@ Engineering that matters in practice:
 - In live mode a failed call is left empty and labelled `error`. Demo data is never mixed into live results.
 - Every call is visible under **Under the hood**, labelled `live`, `cache`, `skip` or `error`, with a short summary of what Qloo returned.
 - The same engine is exposed as MCP tools (`list_cast`, `open_display`, `bridge_feather`) over Streamable HTTP.
-- 44 automated tests; copy, audio and mobile layout were reviewed by three other AI assistants, who contributed tests.
+- 44 automated tests in the repository; copy, audio and mobile layout were reviewed by three other AI assistants, who contributed tests.
 
 ## Design
-A complete product, not a proof of concept: ten characters with full ten-feather taste profiles, a peacock whose reaction (swoon, shiver, flicker, fold, yawn, eye-roll, double take) is chosen from what actually matched, bilingual captions, recorded British voices, a mobile layout with a fixed control bar, and an honest "how it works" panel. Everything the peacock says is checked against what is on screen: it never claims a feather moved that did not.
+A fully playable demo, not a sketch: ten characters with full ten-feather taste profiles, a peacock whose reaction (swoon, shiver, flicker, fold, yawn, eye-roll, double take) is chosen from what actually matched, bilingual captions, recorded British voices, a mobile layout with a fixed control bar, and an honest "how it works" panel. Everything the peacock says is checked against what is on screen: it never claims a feather moved that did not.
 
 ## Potential impact
 We do not claim to solve a large problem. We make a narrower, credible point: many recommendation and matching products compress taste into one number, and a number invites ranking people. A display of *which things meet* is a gentler and more useful starting point for conversation, for friends, communities, dating-adjacent products, and teams who want to find common ground. The peacock also shows its working, which makes Qloo's output understandable to people who are not technical. We have not tested it with real users yet; that is the first thing we would do next.
