@@ -16,7 +16,8 @@ from kokoro_onnx import Kokoro
 here = os.path.dirname(os.path.abspath(__file__))
 mdir = os.environ.get('KOKORO_DIR', here)
 VOICE = os.environ.get('KOKORO_VOICE', 'bm_fable')
-out_dir = os.path.join(here, '..', 'public', 'audio', 'en')
+out_dir = os.path.join(here, '..', 'public', 'audio', os.environ.get('KOKORO_OUT', 'en'))
+SCALE = float(os.environ.get('KOKORO_SPEED_SCALE', '1'))
 os.makedirs(out_dir, exist_ok=True)
 force = '--force' in sys.argv
 lines = json.load(open(sys.argv[1]))
@@ -33,7 +34,7 @@ for l in lines:
     if os.path.exists(path) and not force:
         continue
     text = l['text'].replace('…', '... ').replace('  ', ' ')
-    samples, sr = k.create(text, voice=VOICE, speed=speed_for(l['id']), lang='en-gb')
+    samples, sr = k.create(text, voice=VOICE, speed=speed_for(l['id']) * SCALE, lang='en-gb')
     with tempfile.NamedTemporaryFile(suffix='.wav') as tmp:
         sf.write(tmp.name, samples, sr)
         subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-i', tmp.name,

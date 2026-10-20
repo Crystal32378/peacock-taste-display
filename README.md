@@ -49,14 +49,18 @@ QLOO_API_KEY=... npm run qloo:smoke   # prints raw Qloo responses to verify the 
 
 The 「Sound」 toggle adds synthesised effects (feather rustle, a gold chime, a kiss "pop" in Lover mode — no audio files, no copyright) and lets the peacock speak its lines.
 
-- Without recordings it uses the browser's own voice (en-GB / zh-TW).
-- For a proper voice, record every line once with Google Cloud Text-to-Speech and commit the mp3s; the site picks them up automatically:
+- English lines are pre-recorded (`public/audio/en/`, British male voice) with [Kokoro](https://github.com/thewh1teagle/kokoro-onnx), an open-source text-to-speech model that runs locally. No key and no network call is needed to record them.
+- A second recording in a British female voice is kept in `public/audio/en-f/` (not wired into the page yet).
+- Chinese lines use the browser's own zh-TW voice.
 
 ```bash
-export GOOGLE_TTS_API_KEY=...        # API key restricted to the Cloud Text-to-Speech API
-npm run voice:list                   # audition the available voices
-npm run voice                        # records public/audio/en/*.mp3 (48 lines); add -- --lang en,zh for Chinese too
+pip install kokoro-onnx soundfile     # plus ffmpeg; model files: see scripts/make-voice-kokoro.py
+node -e "import('./scripts/voice-lines.mjs').then(m=>console.log(JSON.stringify(m.enumerateLines(['en']))))" > /tmp/lines.json
+KOKORO_DIR=/path/to/models python3 scripts/make-voice-kokoro.py /tmp/lines.json
+# female voice:  KOKORO_VOICE=bf_emma KOKORO_OUT=en-f KOKORO_SPEED_SCALE=0.93 ...
 ```
+
+An older Google Cloud TTS script (`npm run voice`) is still in `scripts/`; it is not what the shipped recordings were made with.
 
 ## API
 
@@ -66,6 +70,43 @@ npm run voice                        # records public/audio/en/*.mp3 (48 lines);
 - `POST /mcp` — MCP (Streamable HTTP, spec 2025-11-25): `list_cast`, `open_display`, `bridge_feather`
 
 Limits: at most 3 items per category, 60 characters each; per-IP rate limit; 6-hour private server-side response cache.
+
+## How a request becomes a result (keys redacted)
+
+For one character, the page shows the exact calls under **Under the hood**. A typical pair looks like this:
+
+```
+GET https://hackathon.api.qloo.com/search?query=Brian%20Eno&types=urn:entity:artist&take=1
+    X-Api-Key: <redacted, set only as a server environment variable>
+    -> matched: Brian Eno
+
+GET https://hackathon.api.qloo.com/v2/insights?filter.type=urn:entity:artist
+        &signal.interests.entities=<entity id from the search above>&take=40
+    -> N results; top three printed with Qloo's affinity number
+```
+
+The page labels every call `live` (asked Qloo just now), `cache` (asked earlier), `skip` (Qloo cannot use that item as a taste signal) or `error` (Qloo refused). In live mode a failed call is left empty and marked; it is never filled with demo data.
+
+## Data handling
+
+- The Qloo key lives only in the server environment. It is never sent to the browser, never logged, and not in this repo.
+- The app does not write anything to disk. Typed items are sent to Qloo and kept in memory (inside the cache key) for six hours, then dropped.
+- Please enter works, artists, places and brands only. No names of real people you know, and no personal data.
+- Qloo response data is not stored in this repository; the tests use hand-written fixtures.
+- The ten characters are fictional adults. Nobody is contacted, profiled, or scored.
+
+## Known limitations
+
+- The visitor is a fixed demo taste; you can type up to three items per category, but there is no account or saved profile.
+- Qloo cannot use every entity as a taste signal (some places and well-known people return a 400); those are shown as `skip`, and a character with many of them has fewer `neighbor` matches.
+- `neighbor` matching reads the first 40 insight results; a connection further down the list is missed.
+- The hackathon API accepts the games type only as `urn:entity:videogame`, which differs from the docs. The adapter handles it.
+- The English voice is recorded; Chinese uses the browser voice and sounds like a browser voice.
+- Two items repeat across characters (Blue Bottle Coffee, Eslite Bookstore). Several items are chosen for the cast's coherence, not looked up per person.
+- The cast is ten fictional people. It shows the idea; it does not prove that taste overlap predicts friendship.
+- The free Render plan sleeps when idle, so the first load can take up to a minute.
+- Checked in a desktop browser and a 390 px window; not yet on a range of real phones. Screen-reader announcements may repeat a caption.
+- Verdicts depend on live Qloo data and can change as that data changes.
 
 ## Deploy
 
@@ -77,4 +118,4 @@ This project grew out of an earlier voice-first music-matching MCP experiment. T
 
 ## Credits
 
-Concept and direction: Crystal Chang. Code: Claude. Illustrations: generated with GPT image tools; all characters are fictional. License: MIT.
+Concept and direction: Crystal Chang. Code: Claude. Copy and test reviews from three other AI assistants working under Crystal's direction (one GLM-based, one OpenAI-powered, one more); their suggestion sheets and tests are in `docs/` and `tests/`. Illustrations: generated with GPT image tools; all characters are fictional. License: MIT.
