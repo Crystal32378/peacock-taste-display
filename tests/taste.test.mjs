@@ -78,6 +78,18 @@ test('live failure falls back to fixture and says so', async () => {
   assert.match(r.trace.error, /500/);
 });
 
+test('429 is retried then succeeds; 400 carries the reply text from Qloo', async () => {
+  let n = 0;
+  const q = createQloo({ apiKey: 'k_test', gapMs: 0, fetchImpl: async () => (++n < 3
+    ? { ok: false, status: 429, headers: { get: () => '0.01' }, text: async () => 'slow down' }
+    : { ok: true, status: 200, json: async () => ({ results: [{ entity_id: 'E1', name: 'Brian Eno' }] }) }) });
+  const r = await q.resolve('artist', 'Brian Eno');
+  assert.equal(r.trace.source, 'live'); assert.equal(r.value.id, 'E1'); assert.equal(n, 3);
+  const q2 = createQloo({ apiKey: 'k_test', gapMs: 0, fetchImpl: async () => ({ ok: false, status: 400, text: async () => 'bad type urn:x' }) });
+  const r2 = await q2.resolve('video_game', 'Hades');
+  assert.equal(r2.trace.source, 'fallback'); assert.match(r2.trace.error, /400: bad type/);
+});
+
 test('extractEntities tolerates both envelope shapes', () => {
   assert.equal(extractEntities({ results: [{ id: 'a', name: 'A' }] })[0].id, 'a');
   assert.equal(extractEntities({ results: { entities: [{ entity_id: 'b', name: 'B' }] } })[0].id, 'b');

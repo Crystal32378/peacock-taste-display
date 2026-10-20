@@ -65,7 +65,7 @@ npm run voice                        # records public/audio/en/*.mp3 (48 lines);
 - `POST /api/display` `{ "profileId": "mira", "viewer": { "feathers": { "artist": ["Brian Eno"] } } }`
 - `POST /mcp` — MCP (Streamable HTTP, spec 2025-11-25): `list_cast`, `open_display`, `bridge_feather`
 
-Limits: at most 3 items per category, 60 characters each; per-IP rate limit; 10-minute response cache.
+Limits: at most 3 items per category, 60 characters each; per-IP rate limit; 6-hour private server-side response cache.
 
 ## Deploy
 

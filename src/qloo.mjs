@@ -46,21 +46,36 @@ export function createQloo(opts = {}) {
   const apiKey = opts.apiKey ?? process.env.QLOO_API_KEY ?? '';
   const baseUrl = (opts.baseUrl ?? process.env.QLOO_BASE_URL ?? 'https://hackathon.api.qloo.com').replace(/\/$/, '');
   const fetchImpl = opts.fetchImpl ?? globalThis.fetch;
-  const timeoutMs = opts.timeoutMs ?? 8000;
-  const ttlMs = opts.ttlMs ?? 10 * 60 * 1000;
+  const timeoutMs = opts.timeoutMs ?? 12000;
+  const ttlMs = opts.ttlMs ?? 6 * 60 * 60 * 1000;
   const cache = new Map();
 
   const mode = () => (apiKey ? 'live' : 'fixture');
 
+  // Be polite to Qloo's rate limit: at most 2 requests in flight, small gap, and retry 429/5xx with backoff.
+  const MAX_INFLIGHT = opts.maxInflight ?? 2, GAP_MS = opts.gapMs ?? 150, RETRIES = opts.retries ?? 3;
+  let inflight = 0; const waiting = [];
+  const slot = () => new Promise((go) => { const t = () => { inflight++; go(); }; inflight < MAX_INFLIGHT ? t() : waiting.push(t); });
+  const free = () => setTimeout(() => { inflight--; waiting.shift()?.(); }, GAP_MS);
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
   async function liveGet(pathAndQuery) {
-    const ctl = new AbortController();
-    const timer = setTimeout(() => ctl.abort(), timeoutMs);
-    try {
-      const res = await fetchImpl(baseUrl + pathAndQuery, { headers: { 'X-Api-Key': apiKey, Accept: 'application/json' }, signal: ctl.signal });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      return await res.json();
-    } finally {
-      clearTimeout(timer);
+    for (let attempt = 0; ; attempt++) {
+      await slot();
+      const ctl = new AbortController();
+      const timer = setTimeout(() => ctl.abort(), timeoutMs);
+      let res, text = '';
+      try {
+        res = await fetchImpl(baseUrl + pathAndQuery, { headers: { 'X-Api-Key': apiKey, Accept: 'application/json' }, signal: ctl.signal });
+        if (res.ok) return await res.json();
+        text = String((await res.text?.()) ?? '').replace(/\s+/g, ' ').slice(0, 160);
+      } finally {
+        clearTimeout(timer); free();
+      }
+      const retryable = res.status === 429 || res.status >= 500;
+      if (!retryable || attempt >= RETRIES) throw new Error(`HTTP ${res.status}${text ? ': ' + text : ''}`);
+      const ra = Number(res.headers?.get?.('retry-after'));
+      await sleep(Number.isFinite(ra) && ra > 0 ? Math.min(ra * 1000, 5000) : 500 * 2 ** attempt);
     }
   }
 
