@@ -185,8 +185,12 @@ html[data-lang=en] .who .tasteLine{font-family:var(--ui);letter-spacing:.01em}
 html[data-lang=en] .cap .theirs{font-family:var(--ui)}
 .engine .legend{display:block;margin-top:4px;opacity:.75}
 
-/* small screens: keep the buttons and cast row near the first screen */
+/* details for the setup rules */
+.how{margin:6px 0 0;margin-inline:0;border-top:0;padding-top:0;max-width:46em;font-size:13px;color:var(--dim)}
+.how summary{cursor:pointer;display:inline-block;padding:4px 0}
+.how p{margin:4px 0 0;line-height:1.65}
+/* small screens: the buttons stay reachable in a bottom bar */
 @media (max-width:600px){
-  .setup{font-size:12px;line-height:1.55;margin-top:6px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
-  .cap .theirs{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:11px}
+  .ctl{position:sticky;bottom:0;z-index:20;margin:10px -16px 0;padding:10px 16px calc(10px + env(safe-area-inset-bottom));background:var(--bg);border-top:1px solid var(--line)}
+  .cap .theirs{font-size:11px}
 }

@@ -193,7 +193,7 @@ function showBridge() {
   fan.classList.add('open'); // the door needs the tail open again
   setHead(st.mode === 'lover' ? 'flustered' : 'startled');
   $('bridge').hidden = true;
-  snd.chime(); if (st.lang === 'en') snd.say('en', 'en.bridge.head', T().bridgeHead); // the one recorded line of the door (English only); the rest is templated text
+  snd.chime(); snd.say(st.lang, st.lang === 'en' ? 'en.bridge.head' : 'zh.bridge.head', T().bridgeHead); // the one recorded line of the door (English only); the rest is templated text
   const af = typeof b.affinity === 'number' ? (st.lang === 'en' ? ` (affinity ${b.affinity.toFixed(2)})` : `（affinity ${b.affinity.toFixed(2)}）`) : '';
   cap(T().bridgeHead, b.kind === 'theirs' ? T().bridgeTheirs(cn, b.item, p.name, af) : b.kind === 'shared' ? T().bridgeShared(cn, b.item, p.name, af) : (r.engine === 'live' ? T().bridgeQloo(cn, b.item, p.name, af) : T().bridgeDemo(cn, b.item)));
 }
@@ -224,7 +224,7 @@ async function init() {
     document.documentElement.dataset.lang = st.lang;
     document.title = T().title;
     $('replay').textContent = T().replay; $('next').textContent = T().next; $('bridge').textContent = T().bridge;
-    $('sumText').textContent = T().summary; $('setup').textContent = T().setup; $('castHint').textContent = T().pick; $('fict').textContent = T().fict; $('note').textContent = T().note; $('foot').textContent = T().foot;
+    $('sumText').textContent = T().summary; $('setup').textContent = T().setup; $('howSum').textContent = T().howSum; $('howBody').textContent = T().howBody; $('castHint').textContent = T().pick; $('fict').textContent = T().fict; $('note').textContent = T().note; $('foot').textContent = T().foot;
     $('lEn').setAttribute('aria-pressed', st.lang === 'en'); $('lZh').setAttribute('aria-pressed', st.lang === 'zh');
     setAuto(); $('snd').textContent = UI_SOUND[st.lang](snd.isOn()); $('snd').setAttribute('aria-pressed', snd.isOn());
   };
