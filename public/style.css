@@ -184,3 +184,9 @@ html[data-lang=en] .who .tasteLine{font-family:var(--ui);letter-spacing:.01em}
 .cap .theirs{margin:6px 0 0;font-family:var(--tc);font-size:12px;line-height:1.6;color:var(--dim);opacity:.8}
 html[data-lang=en] .cap .theirs{font-family:var(--ui)}
 .engine .legend{display:block;margin-top:4px;opacity:.75}
+
+/* small screens: keep the buttons and cast row near the first screen */
+@media (max-width:600px){
+  .setup{font-size:12px;line-height:1.55;margin-top:6px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+  .cap .theirs{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:11px}
+}

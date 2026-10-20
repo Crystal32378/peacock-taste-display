@@ -172,7 +172,7 @@ async function play() {
   $('bridge').hidden = !(r.bridge && (r.verdict === 'fold' || r.verdict === 'flicker'));
   if (folded) {
     // no overlap worth a shiver: the peacock folds its tail, head stays, dry look
-    await Promise.all([sleep(2200), snd.whenDone(6500)]); if (id !== st.rid) return; // the tail closes when the line ends, not before
+    await Promise.all([sleep(2200), snd.whenDone(9500)]); if (id !== st.rid) return; // the tail closes when the line ends, not before
     fan.classList.remove('open', 'match'); stopGold();
   }
   if (!st.auto) return;

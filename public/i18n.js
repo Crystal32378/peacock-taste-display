@@ -34,7 +34,7 @@ export const COPY = {
     },
     lover: {
       swoon: [
-        ['Oh. The peacock is blushing.', 'Every feather at once. It looks away and studies the ceiling.'],
+        ['Oh. The peacock is blushing.', 'Several feathers at once. It looks away and studies the ceiling.'],
         ["Don't look at me.", 'It has gone quite pink. It says it is the lighting.'],
         ['This is embarrassing.', 'The tail is far more honest than the peacock. The peacock is pretending not to have seen.'],
       ],
@@ -56,7 +56,7 @@ export const COPY = {
       ],
       yawn: [['…again?', 'Nothing moved. The peacock yawns, and consults a watch it does not own.'], ['Forgive me.', 'Nothing moved, again. The peacock hides a yawn behind a feather. Poorly.']],
       eyeroll: [['I am being very patient.', 'Several in a row now. The peacock rolls its eyes, mostly at its own very narrow taste.'], ['Truly.', 'Another fold. The peacock studies the ceiling, which is at least consistent.']],
-      startle: [['…Wait.', 'A moment ago it was yawning. This one is different.'], ['Oh.', 'The peacock had stopped expecting anything. It is now pretending it never did.']],
+      startle: [['…Wait.', 'A moment ago it was yawning. This one is different.'], ['Oh.', 'The peacock had given up hope. Now it pretends it believed in this all along.']],
     },
   },
   zh: {
@@ -79,7 +79,7 @@ export const COPY = {
         ['Barely a rustle.', '尾巴考慮過起立鼓掌，然後想起牠另有約會。'],
       ],
       fold: [
-        ['Not tonight.', '一根都沒動。孔雀收屏。不是你不好，是尾巴今天沒心情。'],
+        ['Not tonight.', '一根都沒動。孔雀收屏。尾巴的事，跟你這個人無關。'],
         ['Nothing. Not one.', '孔雀看過你的{cat}清單了，沒有意見。'],
         ['I checked twice.', '孔雀認真比對了兩次，結果和第一次一樣。禮貌地說：改天。'],
         ['The tail has folded.', '收屏了。孔雀會把這次寫進「改天」，字很小。'],
@@ -113,7 +113,7 @@ export const COPY = {
       ],
       yawn: [['…again?', '又一根都沒動。孔雀打了個哈欠，低頭看了看手腕，牠根本沒戴錶。'], ['Forgive me.', '又是一根都沒動。孔雀用羽毛擋住哈欠，擋得很差。']],
       eyeroll: [['I am being very patient.', '連續好幾位都沒動，孔雀翻了白眼，主要是對自己太挑的口味。'], ['Truly.', '又收屏了。孔雀研究起天花板，至少天花板很一致。']],
-      startle: [['…Wait.', '孔雀剛剛還在打哈欠。等一下，這個不一樣。'], ['Oh.', '孔雀早就不抱期待了，現在正假裝自己從來沒有期待過。']],
+      startle: [['…Wait.', '孔雀剛剛還在打哈欠。等一下，這個不一樣。'], ['Oh.', '孔雀早就不抱期待了，現在卻裝得好像一直看好這場相遇。']],
     },
   },
 };
@@ -131,7 +131,7 @@ export const UI = {
     summary: 'Under the hood: Qloo call log',
     setup: 'You are the visitor, with a demo taste of your own (below). Pick a character and the peacock reads your ten feathers against theirs. Friend teases; Lover blushes. Gold names are where you meet; dim feathers did not. If nothing meets, it may whisper a door.',
     hits: 'Where you meet: ', pick: 'Meet someone else',
-    note: 'No compatibility score exists between two people. The peacock only looks at which feathers meet, and never judges the person. Affinity appears only on single items. Every character is a fictional adult.',
+    note: 'We do not give people a compatibility score. The peacock only looks at which feathers meet, and never judges the person. Affinity is the number Qloo gives one recommended item, never a score for two people. Every character is a fictional adult.',
     opening: (name) => ['Opening…', `The peacock is comparing your ten feathers with ${name}'s.`],
     cat: 'taste',
     fav: (heart, t, item) => `${heart ? '♥' : '✦'} The peacock is partial to the “${t}” feather: ${item}`,
@@ -142,7 +142,7 @@ export const UI = {
     bridgeDemo: (cat, item) => `Nothing met on “${cat}”. The peacock (demo data, not Qloo yet) suggests you try ${item}.`,
     engine: {
       live: 'Source: <b>Qloo live API</b>. Identical items are matched directly; “≈” (similar taste) comes from Qloo insights.',
-      legend: 'live = asked Qloo just now · cache = asked earlier, kept privately on our server · skip = Qloo cannot use that item as a taste signal · error = Qloo refused the call',
+      legend: 'live = asked Qloo just now · cache = asked earlier, kept briefly on our server · skip = Qloo cannot use that item as a taste signal · error = Qloo refused the call',
       tally: (c) => `This answer: ${c.live} live · ${c.cache} cached · ${c.skip} skipped · ${c.error} errors.`,
       fixture: 'Source: <b>offline demo data (fixture)</b>.',
       fixtureNote: ' This deployment has no Qloo API key yet, so the “neighbours” below are hand-written demo data, not Qloo output.',
@@ -165,7 +165,7 @@ export const UI = {
     summary: '背後怎麼算的：Qloo 呼叫紀錄',
     setup: '你是來訪的人，帶著一組示範用的品味（見下方）。選一位角色，孔雀會拿你的十根羽毛和對方的比對。Friend 是損友，Lover 是會臉紅的那種。金色名字是你們相遇的地方，暗的羽毛沒對上；一根都沒對上時，孔雀可能會悄悄指一扇門。',
     hits: '你們相遇的地方：', pick: '換一位來看看',
-    note: '兩個人之間不給總分：孔雀只看哪幾根羽毛對上，從不評斷這個人。親和度數字只會出現在單一項目上。人物皆為虛構成年角色。',
+    note: '兩個人之間不給總分：孔雀只看哪幾根羽毛對上，從不評斷這個人。親和度（affinity）是 Qloo 對單一推薦項目的數值，不是兩個人的配對分數。人物皆為虛構成年角色。',
     opening: (name) => ['Opening…', `孔雀正在拿你的十根羽毛，和${name}的比對。`],
     cat: '品味',
     fav: (heart, t, item) => `${heart ? '♥' : '✦'} 孔雀偏心「${t}」這一根：${item}`,
@@ -176,7 +176,7 @@ export const UI = {
     bridgeDemo: (cat, item) => `「${cat}」這根沒對上。孔雀（示範資料，尚未接 Qloo）倒是建議你試試 ${item}。`,
     engine: {
       live: '資料來源：<b>Qloo 即時 API</b>。完全相同的項目直接比對；「≈」（口味相近）來自 Qloo 的 insights 結果。',
-      legend: 'live＝剛剛問了 Qloo ・ cache＝先前問過，私下存在我們的伺服器 ・ skip＝Qloo 無法把這個項目當口味訊號 ・ error＝Qloo 拒絕了這次呼叫',
+      legend: 'live＝剛剛問了 Qloo ・ cache＝先前查詢的結果，暫存在伺服器 ・ skip＝Qloo 無法把這個項目當口味訊號 ・ error＝Qloo 拒絕了這次呼叫',
       tally: (c) => `這次回答：${c.live} 次即時、${c.cache} 次快取、${c.skip} 次略過、${c.error} 次錯誤。`,
       fixture: '資料來源：<b>離線示範資料（fixture）</b>。',
       fixtureNote: '這個部署還沒有設定 Qloo API key，所以下面的「相近」是我們手寫的示範資料，不是 Qloo 的輸出。',
