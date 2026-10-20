@@ -99,11 +99,26 @@ async function findBridge(yoursAll, theirsAll, feathers, qloo, trace) {
     const rel = await qloo.related(type, signals.map((s) => s.id), signals.map((s) => s.name));
     trace.push(rel.trace);
     const th = await resolveAll(qloo, type, theirsAll[type], trace);
-    return { type, results: rel.value, match: findMatch(rel.value, th) };
+    // A door both of you can walk through: recommended from YOUR taste and also from THEIRS in this category.
+    let shared = null;
+    const theirIds = th.filter((x) => x.entity?.id).map((x) => x.entity.id);
+    if (theirIds.length && !findMatch(rel.value, th)) {
+      const relT = await qloo.related(type, theirIds, th.map((x) => x.name));
+      trace.push(relT.trace);
+      const mine = new Set([...Object.values(yoursAll).flat(), ...th.map((x) => x.name)].map(norm));
+      const tMap = new Map([...relT.value.filter((e) => e.id).map((e) => [e.id, e]), ...relT.value.map((e) => [norm(e.name), e])]);
+      shared = rel.value
+        .map((e) => ({ e, t: tMap.get(e.id) ?? tMap.get(norm(e.name)) }))
+        .filter((x) => x.t && !mine.has(norm(x.e.name)))
+        .sort((a, b) => Math.min(b.e.affinity ?? 0, b.t.affinity ?? 0) - Math.min(a.e.affinity ?? 0, a.t.affinity ?? 0))[0] ?? null;
+    }
+    return { type, results: rel.value, match: findMatch(rel.value, th), shared };
   }));
 
   const hits = tried.filter((x) => x.match).sort((a, b) => (b.match.affinity ?? 0) - (a.match.affinity ?? 0));
   if (hits.length) return { type: hits[0].type, item: hits[0].match.item, affinity: hits[0].match.affinity, kind: 'theirs' };
+  const sh = tried.filter((x) => x.shared).sort((a, b) => (b.shared.e.affinity ?? 0) - (a.shared.e.affinity ?? 0))[0];
+  if (sh) return { type: sh.type, item: sh.shared.e.name, affinity: sh.shared.e.affinity ?? null, kind: 'shared' };
   const first = tried.find((x) => x.results.length);
   return first ? { type: first.type, item: first.results[0].name, affinity: first.results[0].affinity ?? null, kind: 'qloo' } : null;
 }

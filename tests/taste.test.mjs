@@ -122,3 +122,21 @@ test('voice lines: unique ids, no leftover placeholders, both languages covered'
   assert.ok(all.some((l) => l.id === 'en.friend.fold.1.podcast' && /your podcast list/.test(l.text)));
   assert.ok(enumerateLines(['zh']).every((l) => l.lang === 'zh'));
 });
+
+test('bridge: prefers a door that both viewer-taste and their-taste recommend (kind shared)', async () => {
+  const urls = [];
+  const ent = (id, name, a) => ({ entity_id: id, name, query: { affinity: a } });
+  const fetchImpl = async (u) => {
+    urls.push(u);
+    const q = new URL(u, 'https://x').searchParams;
+    if (u.includes('/search')) { const n = q.get('query'); return { ok: true, status: 200, json: async () => ({ results: [{ entity_id: 'id:' + n, name: n }] }) }; }
+    const sig = q.get('signal.interests.entities'), type = q.get('filter.type');
+    const list = type.endsWith('tv_show')
+      ? (sig.includes('id:Severance') ? [ent('S1', 'Shared Show', 0.8), ent('T1', 'Only Theirs', 0.9)] : [ent('S1', 'Shared Show', 0.7), ent('M1', 'Only Mine', 0.95)])
+      : [];
+    return { ok: true, status: 200, json: async () => ({ results: list }) };
+  };
+  const q = createQloo({ apiKey: 'k_test', gapMs: 0, fetchImpl });
+  const r = await compare({ id: 'you', feathers: { movie: ['Perfect Days'] } }, { id: 'x', name: 'X', feathers: { tv_show: ['Severance'] } }, q);
+  assert.equal(r.bridge?.kind, 'shared'); assert.equal(r.bridge.item, 'Shared Show');
+});

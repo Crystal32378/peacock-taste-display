@@ -187,7 +187,7 @@ function showBridge() {
   setHead(st.mode === 'lover' ? 'flustered' : 'startled');
   $('bridge').hidden = true;
   snd.chime(); snd.say('en', 'en.bridge.head', T().bridgeHead); // the one recorded line of the door; the rest is templated text
-  cap(T().bridgeHead, b.kind === 'theirs' ? T().bridgeTheirs(cn, b.item, p.name) : (r.engine === 'live' ? T().bridgeQloo : T().bridgeDemo)(cn, b.item));
+  cap(T().bridgeHead, b.kind === 'theirs' ? T().bridgeTheirs(cn, b.item, p.name) : b.kind === 'shared' ? T().bridgeShared(cn, b.item, p.name) : (r.engine === 'live' ? T().bridgeQloo : T().bridgeDemo)(cn, b.item));
 }
 
 function next() { st.idx = (st.idx + 1) % st.cast.length; play(); }

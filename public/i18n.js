@@ -135,6 +135,7 @@ export const UI = {
     fav: (heart, t, item) => `${heart ? '♥' : '✦'} The peacock is partial to the “${t}” feather: ${item}`,
     bridgeHead: 'But here is a door.',
     bridgeTheirs: (cat, item, name) => `Nothing met on “${cat}”. But you might love ${item} and, as it happens, so does ${name}.`,
+    bridgeShared: (cat, item, name) => `Nothing met on “${cat}”. But ${item} sits where your taste and ${name}’s overlap. Either of you might love it.`,
     bridgeQloo: (cat, item) => `Nothing met on “${cat}”. Qloo suggests you try ${item}.`,
     bridgeDemo: (cat, item) => `Nothing met on “${cat}”. The peacock (demo data, not Qloo yet) suggests you try ${item}.`,
     engine: {
@@ -163,6 +164,7 @@ export const UI = {
     fav: (heart, t, item) => `${heart ? '♥' : '✦'} 孔雀偏心「${t}」這一根：${item}`,
     bridgeHead: '但這裡有一扇門。',
     bridgeTheirs: (cat, item, name) => `「${cat}」這根沒對上，不過你可能會喜歡 ${item}，那剛好是 ${name} 的${cat}。`,
+    bridgeShared: (cat, item, name) => `「${cat}」這根沒對上。但 ${item} 落在你和 ${name} 口味重疊的地方，你們都可能喜歡。`,
     bridgeQloo: (cat, item) => `「${cat}」這根沒對上。Qloo 倒是推薦你可以試試 ${item}。`,
     bridgeDemo: (cat, item) => `「${cat}」這根沒對上。孔雀（示範資料，尚未接 Qloo）倒是建議你試試 ${item}。`,
     engine: {
