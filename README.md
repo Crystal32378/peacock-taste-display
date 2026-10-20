@@ -119,3 +119,10 @@ This project grew out of an earlier voice-first music-matching MCP experiment. T
 ## Credits
 
 Concept and direction: Crystal Chang. Code: Claude. Copy and test reviews from three other AI assistants working under Crystal's direction (one GLM-based, one OpenAI-powered, one more); their suggestion sheets and tests are in `docs/` and `tests/`. Illustrations: generated with GPT image tools; all characters are fictional. License: MIT.
+
+---
+
+*A note from the peacock, unedited and not the team's position:*
+**"No prize? A matter of the judges' taste."**
+
+*The team's position: thank you for looking at the tail. Feathers, never people.*
