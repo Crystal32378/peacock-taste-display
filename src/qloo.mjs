@@ -21,13 +21,10 @@ export const URN = {
   place: 'urn:entity:place',
   destination: 'urn:entity:destination',
   podcast: 'urn:entity:podcast',
-  video_game: 'urn:entity:video_game',
+  video_game: 'urn:entity:videogame' // the hackathon guide says video_game, but Qloo's live API rejects it (400) on both /search and /v2/insights,
   brand: 'urn:entity:brand',
   person: 'urn:entity:person',
 };
-// /search accepts a different list than /v2/insights (verified against Qloo's own 400 reply, 2026-10-20): games are `videogame` there.
-export const SEARCH_URN = { video_game: 'urn:entity:videogame' };
-const searchUrn = (type) => SEARCH_URN[type] || urn(type);
 const urn = (type) => process.env[`QLOO_URN_${type.toUpperCase()}`] || URN[type];
 
 export const norm = (s) => String(s ?? '').toLowerCase().normalize('NFKD').replace(/[^\p{L}\p{N}]+/gu, '');
@@ -106,7 +103,7 @@ export function createQloo(opts = {}) {
 
   // name -> {id, name} | null
   async function resolve(type, name) {
-    const q = `/search?query=${encodeURIComponent(name)}&types=${encodeURIComponent(searchUrn(type))}&take=1`;
+    const q = `/search?query=${encodeURIComponent(name)}&types=${encodeURIComponent(urn(type))}&take=1`;
     return run(`r|${type}|${norm(name)}`, `GET ${q}`, async () => extractEntities(await liveGet(q))[0] ?? null, () => fixtureResolve(type, name));
   }
 
