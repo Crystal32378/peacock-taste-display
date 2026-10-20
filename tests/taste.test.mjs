@@ -140,3 +140,9 @@ test('bridge: prefers a door that both viewer-taste and their-taste recommend (k
   const r = await compare({ id: 'you', feathers: { movie: ['Perfect Days'] } }, { id: 'x', name: 'X', feathers: { tv_show: ['Severance'] } }, q);
   assert.equal(r.bridge?.kind, 'shared'); assert.equal(r.bridge.item, 'Shared Show');
 });
+
+test('an entity Qloo cannot use as a taste signal is a skip, not an error', async () => {
+  const q = createQloo({ apiKey: 'k_test', gapMs: 0, fetchImpl: async () => ({ ok: false, status: 400, text: async () => '{"errors":[{"message":"All of the provided signal.interests.entities were invalid.","path":"signal.interests.entities"}]}' }) });
+  const r = await q.related('person', ['x'], ['X']);
+  assert.equal(r.trace.source, 'skip'); assert.deepEqual(r.value, []);
+});

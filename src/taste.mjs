@@ -74,7 +74,7 @@ export async function compare(viewer, profile, qloo) {
   const lit = feathers.filter((f) => f.state !== 'none').sort((a, b) => strength(b) - strength(a));
   const favorite = lit.length ? { type: lit[0].type, item: lit[0].item, kind: lit[0].state } : null;
 
-  const sources = new Set(trace.map((t) => (t.source === 'cache' || t.source === 'error') ? null : t.source).filter(Boolean));
+  const sources = new Set(trace.map((t) => (t.source === 'cache' || t.source === 'error' || t.source === 'skip') ? null : t.source).filter(Boolean));
   const engine = sources.size === 0 ? (qloo.mode()) : sources.size === 1 ? [...sources][0] : 'mixed';
   return { profileId: profile.id, viewerId: viewer.id || 'you', engine, mode: qloo.mode(), feathers, resonant, verdict, favorite, bridge, errors: trace.filter((t) => t.source === 'error').length, trace };
 }

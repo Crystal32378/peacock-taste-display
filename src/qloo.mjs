@@ -92,7 +92,10 @@ export function createQloo(opts = {}) {
       } catch (err) {
         // In live mode a failed call is left EMPTY and shown as an error. We never fill the gap with demo data.
         value = empty;
-        trace = { call: label, source: 'error', ms: Date.now() - t0, error: String(err?.message || err) };
+        const msg = String(err?.message || err);
+        // Some entities simply cannot be used as a taste signal in Qloo; that is a skip, not a failure.
+        const soft = /signal\.interests\.entities/.test(msg) && /invalid/i.test(msg);
+        trace = { call: label, source: soft ? 'skip' : 'error', ms: Date.now() - t0, error: msg };
       }
     } else {
       value = fx();
