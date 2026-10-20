@@ -146,7 +146,7 @@ export const server = http.createServer(async (req, res) => {
       const want = process.env.DEBUG_TOKEN || '';
       const got = url.searchParams.get('t') || '';
       const ok = want && got.length === want.length && crypto.timingSafeEqual(Buffer.from(got), Buffer.from(want));
-      if (!ok || limited('debug|' + ip, 6)) return sendJson(res, 404, { error: 'Not found' });
+      if (!ok || limited('debug|' + ip, 80)) return sendJson(res, 404, { error: 'Not found' });
       const enc = encodeURIComponent, out = [];
       // Explore mode: ?p=/search?... or ?p=/v2/insights?... (only these two paths), returns the entity names + ids + affinity, not the full payload.
       const px = url.searchParams.get('p');
