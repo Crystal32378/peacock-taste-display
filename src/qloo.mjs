@@ -127,5 +127,11 @@ export function createQloo(opts = {}) {
     } finally { clearTimeout(timer); }
   }
 
-  return { mode, resolve, related, baseUrl, probe };
+  async function probeFull(pathAndQuery) { // same as probe, but not trimmed (diagnostic endpoint only)
+    if (mode() !== 'live') return { status: 0, body: '' };
+    try { const res = await fetchImpl(baseUrl + pathAndQuery, { headers: { 'X-Api-Key': apiKey, Accept: 'application/json' } }); return { status: res.status, body: await res.text() }; }
+    catch (err) { return { status: 0, body: '' }; }
+  }
+
+  return { mode, resolve, related, baseUrl, probe, probeFull };
 }

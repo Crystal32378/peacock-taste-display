@@ -148,6 +148,16 @@ export const server = http.createServer(async (req, res) => {
       const ok = want && got.length === want.length && crypto.timingSafeEqual(Buffer.from(got), Buffer.from(want));
       if (!ok || limited('debug|' + ip, 6)) return sendJson(res, 404, { error: 'Not found' });
       const enc = encodeURIComponent, out = [];
+      // Explore mode: ?p=/search?... or ?p=/v2/insights?... (only these two paths), returns the entity names + ids + affinity, not the full payload.
+      const px = url.searchParams.get('p');
+      if (px) {
+        if (!/^\/(search|v2\/insights)\?/.test(px)) return sendJson(res, 400, { error: 'only /search and /v2/insights' });
+        const r = await qloo.probeFull(px);
+        let brief = r.body.slice(0, 600);
+        try { const j = JSON.parse(r.body); const arr = j?.results?.entities ?? j?.results ?? []; if (Array.isArray(arr)) brief = arr.map((e) => `${e.entity_id ?? e.id} | ${e.name} | ${e.query?.affinity ?? ''}`).join('\n'); } catch {}
+        res.writeHead(r.status === 200 ? 200 : 502, { 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'no-store' });
+        return res.end(`HTTP ${r.status}\n${brief}`);
+      }
       const run = async (p) => { const r = await qloo.probe(p); out.push(`=== GET ${p}\nHTTP ${r.status}\n${r.body}\n`); return r.body; };
       const first = await run('/search?query=' + enc('Brian Eno') + '&types=' + enc('urn:entity:artist') + '&take=2');
       await run('/search?query=' + enc('Brian Eno') + '&take=2');
