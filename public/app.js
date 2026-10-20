@@ -77,6 +77,7 @@ function showProfile(p) {
   $('name').textContent = p.name;
   $('meta').textContent = `${p.age} · ${st.lang === 'en' ? p.cityEn : p.city}`;
   $('blurb').textContent = st.lang === 'en' ? p.blurbEn : p.blurb;
+  $('tasteLine').textContent = (st.lang === 'en' ? p.tagEn : p.tag) ? `${st.lang === 'en' ? p.tagEn : p.tag} · ${st.lang === 'en' ? p.tasteEn : p.taste}` : '';
   const img = $('portrait');
   img.src = `assets/${p.portrait}`; img.alt = T().alt(p.name);
   document.querySelectorAll('#castRow button').forEach((b) => b.setAttribute('aria-current', b.dataset.id === p.id));
