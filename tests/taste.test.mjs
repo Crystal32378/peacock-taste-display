@@ -90,6 +90,14 @@ test('429 is retried then succeeds; 400 carries the reply text from Qloo', async
   assert.equal(r2.trace.source, 'fallback'); assert.match(r2.trace.error, /400: bad type/);
 });
 
+test('games: /search uses videogame, /v2/insights uses video_game', async () => {
+  const seen = [];
+  const q = createQloo({ apiKey: 'k_test', gapMs: 0, fetchImpl: async (u) => { seen.push(u); return { ok: true, status: 200, json: async () => ({ results: [{ entity_id: 'G1', name: 'Hades' }] }) }; } });
+  await q.resolve('video_game', 'Hades'); await q.related('video_game', ['G1'], ['Hades']);
+  assert.match(seen[0], /\/search.*types=urn%3Aentity%3Avideogame(&|$)/);
+  assert.match(seen[1], /filter\.type=urn%3Aentity%3Avideo_game(&|$)/);
+});
+
 test('extractEntities tolerates both envelope shapes', () => {
   assert.equal(extractEntities({ results: [{ id: 'a', name: 'A' }] })[0].id, 'a');
   assert.equal(extractEntities({ results: { entities: [{ entity_id: 'b', name: 'B' }] } })[0].id, 'b');
