@@ -189,8 +189,12 @@ html[data-lang=en] .cap .theirs{font-family:var(--ui)}
 .how{margin:6px 0 0;margin-inline:0;border-top:0;padding-top:0;max-width:46em;font-size:13px;color:var(--dim)}
 .how summary{cursor:pointer;display:inline-block;padding:4px 0}
 .how p{margin:4px 0 0;line-height:1.65}
-/* small screens: the buttons stay reachable in a bottom bar */
+.bridgeRow{display:flex;justify-content:center;margin-top:12px}
+.bridgeRow button[hidden]{display:none}
+/* small screens: the three buttons sit in one fixed bar at the bottom; the page leaves room for it */
 @media (max-width:600px){
-  .ctl{position:sticky;bottom:0;z-index:20;margin:10px -16px 0;padding:10px 16px calc(10px + env(safe-area-inset-bottom));background:var(--bg);border-top:1px solid var(--line)}
+  body{padding-bottom:76px}
+  .ctl{position:fixed;left:0;right:0;bottom:0;z-index:20;margin:0;padding:10px 12px calc(10px + env(safe-area-inset-bottom));flex-wrap:nowrap;gap:8px;background:var(--bg);border-top:1px solid var(--line)}
+  .ctl button{flex:1 1 auto;padding-inline:6px;font-size:13px;white-space:nowrap}
   .cap .theirs{font-size:11px}
 }

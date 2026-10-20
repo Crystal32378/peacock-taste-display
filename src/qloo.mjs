@@ -82,7 +82,7 @@ export function createQloo(opts = {}) {
   // Run `live()` (if keyed), else/after failure run `fx()`. Always returns {value, trace}.
   async function run(key, label, live, fx, empty = null) {
     const hit = cache.get(key);
-    if (hit && Date.now() - hit.t < ttlMs) return { value: hit.value, trace: { ...hit.trace, source: 'cache', ms: 0 } };
+    if (hit && Date.now() - hit.t < ttlMs) return { value: hit.value, trace: { ...hit.trace, source: hit.trace.source === 'skip' ? 'skip' : 'cache', ms: 0 } };
     const t0 = Date.now();
     let value, trace;
     if (mode() === 'live') {
