@@ -120,7 +120,9 @@ async function findBridge(yoursAll, theirsAll, feathers, qloo, trace) {
 
   const hits = tried.filter((x) => x.match).sort((a, b) => (b.match.affinity ?? 0) - (a.match.affinity ?? 0));
   if (hits.length) return { type: hits[0].type, item: hits[0].match.item, affinity: hits[0].match.affinity, kind: 'theirs' };
-  const sh = tried.filter((x) => x.shared).sort((a, b) => (b.shared.e.affinity ?? 0) - (a.shared.e.affinity ?? 0))[0];
+  // Works and people make better doors than businesses: brands and places are nudged down.
+  const doorScore = (x) => (x.shared.e.affinity ?? 0) - (x.type === 'brand' || x.type === 'place' ? 0.25 : 0);
+  const sh = tried.filter((x) => x.shared).sort((a, b) => doorScore(b) - doorScore(a))[0];
   if (sh) return { type: sh.type, item: sh.shared.e.name, affinity: sh.shared.e.affinity ?? null, kind: 'shared' };
   const first = tried.find((x) => x.results.length);
   return first ? { type: first.type, item: first.results[0].name, affinity: first.results[0].affinity ?? null, kind: 'qloo' } : null;
