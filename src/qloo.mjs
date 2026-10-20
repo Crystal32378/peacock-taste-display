@@ -113,7 +113,7 @@ export function createQloo(opts = {}) {
 
   // [entity ids] + type -> [{id,name,affinity}]
   // `names` are the human names behind the ids (used only by the fixture).
-  async function related(type, ids, names, take = 20) {
+  async function related(type, ids, names, take = 40) {
     const q = `/v2/insights?filter.type=${encodeURIComponent(urn(type))}&signal.interests.entities=${encodeURIComponent(ids.join(','))}&take=${take}`;
     return run(`i|${type}|${ids.join(',')}`, `GET ${q}`, async () => extractEntities(await liveGet(q)), () => fixtureRelated(type, names), []);
   }
