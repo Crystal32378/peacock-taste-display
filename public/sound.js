@@ -1,10 +1,12 @@
 // Sound: tiny synthesised effects (no files, no copyright) + the peacock's voice.
 // Voice = recorded mp3 if present (see scripts/make-voice.mjs), otherwise the browser's own voice (en-GB / zh-TW).
 // Off by default; the toggle click is the user gesture browsers require.
-let ctx = null, on = false, audio = null;
+let ctx = null, on = false, audio = null, voiceDir = 'en';
 const ac = () => (ctx ??= new (window.AudioContext || window.webkitAudioContext)());
 
 export const isOn = () => on;
+export const isHer = () => voiceDir === 'en-f';
+export function setHer(v) { voiceDir = v ? 'en-f' : 'en'; stopVoice(); }
 export function setOn(v) { on = v; if (v) { try { ac().resume(); } catch {} } else stopVoice(); }
 
 function env(g, t, a, peak, d) { g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(peak, t + a); g.gain.exponentialRampToValueAtTime(0.0001, t + d); }
@@ -76,7 +78,7 @@ export function say(lang, id, text, delay = 0) {
   fin = () => {}; // "in flight" starts now, even if the voice itself starts after `delay`
   const go = () => {
     if (window.__NOAUDIO || lang !== 'en') return browserVoice(text, lang);
-    const a = new Audio(`audio/${lang}/${id}.mp3`); audio = a;
+    const a = new Audio(`audio/${lang === 'en' ? voiceDir : lang}/${id}.mp3`); audio = a;
     a.onended = () => { if (audio === a) { audio = null; settle(); } };
     a.onerror = () => { if (audio === a) { audio = null; browserVoice(text, lang); } };
     a.play().catch(() => { if (audio === a) { audio = null; browserVoice(text, lang); } });

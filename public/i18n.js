@@ -135,6 +135,7 @@ export const UI = {
     hits: 'Where you meet: ', pick: 'Meet someone else',
     note: 'We do not give people a compatibility score. The peacock only looks at which feathers meet, and never judges the person. Affinity is the number Qloo gives one recommended item, never a score for two people. Every character is a fictional adult.',
     opening: (name) => ['Opening…', `The peacock is comparing your ten feathers with ${name}'s.`],
+    preen: ['Preening…', 'Your peacock needs a few seconds, up to ten, to arrange its feathers while it checks with Qloo.'],
     cat: 'taste',
     fav: (heart, t, item) => `${heart ? '♥' : '✦'} The peacock is partial to the “${t}” feather: ${item}`,
     bridgeHead: 'But here is a door.',
@@ -169,6 +170,7 @@ export const UI = {
     hits: '你們相遇的地方：', pick: '換一位來看看',
     note: '我們不給人相容度分數：孔雀只看哪幾根羽毛對上，從不評斷這個人。親和度（affinity）是 Qloo 對單一推薦項目的數值，不是兩個人的配對分數。人物皆為虛構成年角色。',
     opening: (name) => ['Opening…', `孔雀正在拿你的十根羽毛，和${name}的比對。`],
+    preen: ['Preening…', '孔雀需要幾秒鐘，最久約十秒，整理羽毛，同時和 Qloo 對接口味資料。'],
     cat: '品味',
     fav: (heart, t, item) => `${heart ? '♥' : '✦'} 孔雀偏心「${t}」這一根：${item}`,
     bridgeHead: '但這裡有一扇門。',
@@ -199,4 +201,5 @@ export const UI = {
 // Lines containing {cat} get one file per feather type (…​.place, …​.podcast).
 export const lineId = (lang, mode, key, idx, type) => `${lang}.${mode}.${key}.${idx}${type ? '.' + type : ''}`;
 export const lineText = (head, body, catName) => `${head} ${body}`.replace('{cat}', catName);
+export const UI_VOX = { en: (her) => `Voice: ${her ? 'her' : 'him'}`, zh: (her) => `聲線：${her ? '女' : '男'}` };
 export const UI_SOUND = { en: (on) => `Sound: ${on ? 'on' : 'off'}`, zh: (on) => `聲音：${on ? '開' : '關'}` };

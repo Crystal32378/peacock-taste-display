@@ -47,9 +47,9 @@ test('every spoken line has its recording, and every recording belongs to a line
   }
 });
 
-test('recordings live under public/audio/en only (Chinese uses the browser voice)', () => {
+test('recordings live under public/audio/en and en-f only (Chinese uses the browser voice)', () => {
   const audio = readdirSync(join(ROOT, 'public', 'audio'));
-  assert.deepEqual(audio, ['en'], `unexpected audio subfolders: ${audio.join(', ')}`);
+  assert.deepEqual(audio.sort(), ['en', 'en-f'], `unexpected audio subfolders: ${audio.join(', ')}`);
 });
 
 test('two different lines never ship the same bytes (same take re-sent under another caption)', () => {
@@ -69,4 +69,9 @@ test('two different lines never ship the same bytes (same take re-sent under ano
     });
     assert.ok(texts.every((t) => t === texts[0]), `same take reused with different copy: ${ids.join(' + ')}`);
   }
+});
+
+test('the female recording set covers exactly the same lines as the male set', () => {
+  const a = readdirSync(AUDIO).sort(), b = readdirSync(join(ROOT, 'public', 'audio', 'en-f')).sort();
+  assert.deepEqual(b, a);
 });

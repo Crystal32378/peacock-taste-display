@@ -12,7 +12,7 @@ Qloo's ten entity types are the ten feathers of the tail: film, series, artist, 
 
 - Where your tastes meet, feathers shiver and the names turn gold.
 - If nothing meets, the tail folds. The peacock gives you a dry look and moves on.
-- When a tail folds or only flickers, the peacock may whisper a **door**: something Qloo thinks both of you could love.
+- When a tail folds or only flickers, the peacock may whisper a **door**: a Qloo recommendation to explore, with its basis shown.
 - There is **no compatibility score**. The peacock judges feathers, never the person. Qloo's affinity number appears only on a single recommended item.
 
 The peacock has a Friend mode (teases) and a Lover mode (blushes), English and Traditional Chinese, and optional voice.
@@ -22,7 +22,7 @@ Qloo is the part that makes the display more than string matching.
 
 1. **Search** (`/search`) resolves each item to a Qloo entity of the right type.
 2. **Insights** (`/v2/insights`), seeded with your items of one type, returns what sits in the same taste neighbourhood. If the character's item appears there, that feather is a `neighbor` match ("≈"). Identical items are `same` ("=").
-3. **Doors**: when a tail folds, we ask Qloo what you might love in a category where the *other* person has taste, and look for an item both of you are recommended.
+3. **Doors**: when a tail folds, we ask Qloo what you might love in a category where the *other* person has taste. If the same item is also recommended from the character's own items, the door says so (shared). Otherwise it is a recommendation from your taste alone, and the page says that too.
 
 Without Qloo the app could only match exact names. With it, Brian Eno and Aphex Twin can make a feather shiver, and two people in different genres can still be handed a door.
 
@@ -34,7 +34,7 @@ A zero-dependency Node server (MCP over Streamable HTTP plus a small JSON API), 
 ## Responsible data
 - The ten characters are fictional adults. Nobody is contacted, profiled or scored.
 - The Qloo key stays on the server. The app writes nothing to disk, and Qloo responses are not stored in the repository.
-- Visitors are asked to type works, artists, places and brands only, not personal data.
+- The public demo uses a preset taste profile and fictional adult characters; visitors do not need to enter personal information.
 - The peacock says what a verdict is based on and what it is not.
 
 ## Challenges

@@ -91,13 +91,13 @@ The page labels every call `live` (asked Qloo just now), `cache` (asked earlier)
 
 - The Qloo key lives only in the server environment. It is never sent to the browser, never logged, and not in this repo.
 - The app does not write anything to disk. Typed items are sent to Qloo and kept in memory (inside the cache key) for six hours, then dropped.
-- Please enter works, artists, places and brands only. No names of real people you know, and no personal data.
+- The public demo uses a preset taste profile and fictional adult characters; visitors do not need to enter any personal information. (The API and MCP tools accept a custom list of works, artists, places and brands; please do not send personal data.)
 - Qloo response data is not stored in this repository; the tests use hand-written fixtures.
 - The ten characters are fictional adults. Nobody is contacted, profiled, or scored.
 
 ## Known limitations
 
-- The visitor is a fixed demo taste; you can type up to three items per category, but there is no account or saved profile.
+- The visitor in the web page is a fixed demo taste: there are no input fields, accounts or saved profiles. The API and MCP tools accept up to three items per category.
 - Qloo cannot use every entity as a taste signal (some places and well-known people return a 400); those are shown as `skip`, and a character with many of them has fewer `neighbor` matches.
 - `neighbor` matching reads the first 40 insight results; a connection further down the list is missed.
 - The hackathon API accepts the games type only as `urn:entity:videogame`, which differs from the docs. The adapter handles it.

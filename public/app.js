@@ -1,5 +1,5 @@
 import { buildFan } from './fan.js';
-import { COPY, UI, UI_SOUND, lineId, lineText } from './i18n.js';
+import { COPY, UI, UI_SOUND, UI_VOX, lineId, lineText } from './i18n.js';
 import * as snd from './sound.js';
 
 const $ = (id) => document.getElementById(id);
@@ -139,7 +139,9 @@ async function play() {
   await sleep(60); fan.classList.remove('open'); setHead(null);
   await sleep(900); if (id !== st.rid) return;
   cap(...T().opening(p.name));
-  const r = await pending; if (id !== st.rid) return;
+  let waiting = true;
+  setTimeout(() => { if (waiting && id === st.rid) cap(...T().preen); }, 1500); // a slow answer (cold start, live Qloo calls): say why
+  const r = await pending; waiting = false; if (id !== st.rid) return;
   st.current = r; applyResult(r);
   await sleep(350); if (id !== st.rid) return;
   fan.classList.add('open'); setHead('eager'); snd.rustle();
@@ -227,8 +229,10 @@ async function init() {
     $('replay').textContent = T().replay; $('next').textContent = T().next; $('bridge').textContent = T().bridge;
     $('sumText').textContent = T().summary; $('setup').textContent = T().setup; $('howSum').textContent = T().howSum; $('howBody').textContent = T().howBody; $('castHint').textContent = T().pick; $('fict').textContent = T().fict; $('note').textContent = T().note; $('foot').textContent = T().foot;
     $('lEn').setAttribute('aria-pressed', st.lang === 'en'); $('lZh').setAttribute('aria-pressed', st.lang === 'zh');
-    setAuto(); $('snd').textContent = UI_SOUND[st.lang](snd.isOn()); $('snd').setAttribute('aria-pressed', snd.isOn());
+    setAuto(); $('snd').textContent = UI_SOUND[st.lang](snd.isOn()); $('snd').setAttribute('aria-pressed', snd.isOn()); $('vox').textContent = UI_VOX[st.lang](snd.isHer()); $('vox').setAttribute('aria-pressed', snd.isHer());
   };
+  try { snd.setHer(localStorage.getItem('td-voice') === 'her'); } catch {}
+  $('vox').onclick = () => { snd.setHer(!snd.isHer()); try { localStorage.setItem('td-voice', snd.isHer() ? 'her' : 'him'); } catch {} applyStatic(); };
   $('snd').onclick = () => { snd.setOn(!snd.isOn()); applyStatic(); if (snd.isOn()) snd.rustle(); };
   for (const [id, l] of [['lEn', 'en'], ['lZh', 'zh']]) $(id).onclick = () => {
     if (st.lang === l) return; st.lang = l; st.streak = 0; st.lastId = null; try { localStorage.setItem('td-lang', l); } catch {}
