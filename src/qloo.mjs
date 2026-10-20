@@ -68,7 +68,7 @@ export function createQloo(opts = {}) {
       try {
         res = await fetchImpl(baseUrl + pathAndQuery, { headers: { 'X-Api-Key': apiKey, Accept: 'application/json' }, signal: ctl.signal });
         if (res.ok) return await res.json();
-        text = String((await res.text?.()) ?? '').replace(/\s+/g, ' ').slice(0, 160);
+        text = String((await res.text?.()) ?? '').replace(/\s+/g, ' ').slice(0, 700);
       } finally {
         clearTimeout(timer); free();
       }
