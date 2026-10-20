@@ -192,10 +192,12 @@ html[data-lang=en] .cap .theirs{font-family:var(--ui)}
 .bridgeRow{display:flex;justify-content:center;align-items:center;margin-top:12px;min-height:46px}
 .bridgeRow button[hidden]{display:none}
 /* small screens: the three buttons sit in one fixed bar at the bottom; the page leaves room for it */
-@media (max-width:600px), (max-height:820px){
+@media (max-width:600px){
   body{padding-bottom:76px}
   .ctl{position:fixed;left:0;right:0;bottom:0;z-index:20;margin:0;padding:10px 12px calc(10px + env(safe-area-inset-bottom));flex-wrap:nowrap;gap:8px;background:var(--bg);border-top:1px solid var(--line)}
   .ctl button{flex:1 1 auto;padding-inline:6px;font-size:13px;white-space:nowrap}
 }
 @media (max-width:600px){ .cap .theirs{font-size:11px} }
-@media (min-width:601px) and (max-height:820px){ .ctl{justify-content:center} .ctl button{flex:0 0 auto;padding-inline:18px} }
+.via{margin:6px 0 0;max-width:46em;font-size:12px;letter-spacing:.02em;color:var(--gold)}
+.castHint{margin:14px 0 0}
+.castHint + .cast{margin-top:8px;margin-bottom:6px}

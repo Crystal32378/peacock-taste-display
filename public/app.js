@@ -227,7 +227,7 @@ async function init() {
     document.documentElement.dataset.lang = st.lang;
     document.title = T().title;
     $('replay').textContent = T().replay; $('next').textContent = T().next; $('bridge').textContent = T().bridge;
-    $('sumText').textContent = T().summary; $('setup').textContent = T().setup; $('howSum').textContent = T().howSum; $('howBody').textContent = T().howBody; $('castHint').textContent = T().pick; $('fict').textContent = T().fict; $('note').textContent = T().note; $('foot').textContent = T().foot;
+    $('sumText').textContent = T().summary; $('setup').textContent = T().setup; $('via').textContent = T().via; $('mcpNote').innerHTML = T().mcpNote; $('vox').hidden = !snd.isOn(); $('howSum').textContent = T().howSum; $('howBody').textContent = T().howBody; $('castHint').textContent = T().pick; $('fict').textContent = T().fict; $('note').textContent = T().note; $('foot').textContent = T().foot;
     $('lEn').setAttribute('aria-pressed', st.lang === 'en'); $('lZh').setAttribute('aria-pressed', st.lang === 'zh');
     setAuto(); $('snd').textContent = UI_SOUND[st.lang](snd.isOn()); $('snd').setAttribute('aria-pressed', snd.isOn()); $('vox').textContent = UI_VOX[st.lang](snd.isHer()); $('vox').setAttribute('aria-pressed', snd.isHer());
   };

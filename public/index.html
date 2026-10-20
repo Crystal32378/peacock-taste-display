@@ -23,8 +23,11 @@
   <div class="top"><span>Taste Display</span>
     <span class="right"><button type="button" id="snd" class="snd" aria-pressed="false">Sound: off</button><button type="button" id="vox" class="snd" aria-pressed="false">Voice: him</button><span class="mode lang" role="group" aria-label="Language"><button type="button" id="lEn" aria-pressed="true">EN</button><button type="button" id="lZh" aria-pressed="false">中</button></span><span class="mode" role="group" aria-label="Intent"><button type="button" id="mFriend" aria-pressed="true">Friend</button><button type="button" id="mLover" aria-pressed="false">Lover</button></span></span>
   </div>
-  <p class="setup" id="setup"></p>
+  <p class="setup" id="setup">Waking the peacock…</p>
+  <p class="via" id="via"></p>
   <details class="how"><summary id="howSum"></summary><p id="howBody"></p></details>
+  <p class="castHint" id="castHint">Meet someone else</p>
+  <div class="cast" id="castRow" aria-label="Choose a character"></div>
   <div class="stage">
     <div class="who">
       <div class="arch"><img id="portrait" alt="" width="720" height="900"></div>
@@ -43,12 +46,11 @@
     <button type="button" id="next">Next</button>
     <button type="button" id="auto" aria-pressed="false">Auto-play: off</button>
   </div>
-  <p class="castHint" id="castHint">Meet someone else</p>
-  <div class="cast" id="castRow" aria-label="Choose a character"></div>
   <p class="you" id="you"></p>
   <details>
     <summary id="sumText">Under the hood: Qloo call log</summary>
     <p class="engine" id="engine"></p>
+    <p class="engine" id="mcpNote"></p>
     <pre id="trace"></pre>
     <p class="note" id="note"></p>
   </details>

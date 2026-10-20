@@ -50,7 +50,7 @@ QLOO_API_KEY=... npm run qloo:smoke   # prints raw Qloo responses to verify the 
 The 「Sound」 toggle adds synthesised effects (feather rustle, a gold chime, a kiss "pop" in Lover mode — no audio files, no copyright) and lets the peacock speak its lines.
 
 - English lines are pre-recorded (`public/audio/en/`, British male voice) with [Kokoro](https://github.com/thewh1teagle/kokoro-onnx), an open-source text-to-speech model that runs locally. No key and no network call is needed to record them.
-- A second recording in a British female voice is kept in `public/audio/en-f/` (not wired into the page yet).
+- A second recording in a British female voice is kept in `public/audio/en-f/` (used when you press “Voice: her”).
 - Chinese lines use the browser's own zh-TW voice.
 
 ```bash
