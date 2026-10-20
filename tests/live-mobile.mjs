@@ -61,6 +61,19 @@ out.checks.bar = await fr.evaluate(() => {
   };
 });
 
+// what sits behind the fixed bar at first paint: the caption, the ten-feather line, the door
+const clippable = await fr.evaluate(() => {
+  const r = (s) => { const el = document.querySelector(s); if (!el || el.hidden) return null; const b = el.getBoundingClientRect(); return { top: b.top, bottom: b.bottom, height: b.height }; };
+  return { capZh: r('#capZh'), theirs: r('#theirs'), bridge: r('#bridge'), bar: r('.ctl') };
+});
+const ov = (a, b) => (!a || !b) ? 0 : Math.max(0, Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top));
+out.checks.clippedByBar = {
+  capZh: Math.round(ov(clippable.capZh, clippable.bar) * 10) / 10,
+  theirs: Math.round(ov(clippable.theirs, clippable.bar) * 10) / 10,
+  bridge: clippable.bridge ? Math.round(ov(clippable.bridge, clippable.bar) * 10) / 10 : null,
+  barTop: clippable.bar ? Math.round(clippable.bar.top) : null,
+};
+
 const bridgeShown = await waitShown(() => { const b = document.querySelector('#bridge'); return b && !b.hidden; }, 25000);
 if (!bridgeShown) {
   out.checks.bridge = { neverShownWithin25s: true, hint: 'the door button stays hidden while the profile is still being served/fetching' };
