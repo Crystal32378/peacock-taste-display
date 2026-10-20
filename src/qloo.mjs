@@ -21,7 +21,7 @@ export const URN = {
   place: 'urn:entity:place',
   destination: 'urn:entity:destination',
   podcast: 'urn:entity:podcast',
-  video_game: 'urn:entity:videogame' // the hackathon guide says video_game, but Qloo's live API rejects it (400) on both /search and /v2/insights,
+  video_game: 'urn:entity:videogame', // the hackathon guide says video_game, but Qloo's live API rejects it (400) on both /search and /v2/insights
   brand: 'urn:entity:brand',
   person: 'urn:entity:person',
 };
