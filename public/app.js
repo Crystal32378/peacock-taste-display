@@ -115,7 +115,7 @@ function renderTrace(r) {
   if (r.errors) $('engine').innerHTML += ' ' + E.errors(r.errors);
   const tally = { live: 0, cache: 0, skip: 0, error: 0 }; r.trace.forEach((t) => { if (t.source in tally) tally[t.source]++; });
   $('engine').innerHTML += `<br>${E.tally(tally)}<span class="legend">${E.legend}</span>`;
-  $('trace').textContent = r.trace.map((t) => `[${t.source}${t.ms != null ? ' ' + t.ms + 'ms' : ''}] ${decodeURIComponent(t.call)}${t.error ? '  !! ' + t.error : ''}`).join('\n') || T().noCalls;
+  $('trace').textContent = r.trace.map((t) => `[${t.source}${t.ms != null ? ' ' + t.ms + 'ms' : ''}] ${decodeURIComponent(t.call)}${t.result ? '\n    → ' + t.result : ''}${t.error ? '  !! ' + t.error : ''}`).join('\n') || T().noCalls;
 }
 
 function renderYou() {

@@ -88,7 +88,7 @@ export function createQloo(opts = {}) {
     if (mode() === 'live') {
       try {
         value = await live();
-        trace = { call: label, source: 'live', ms: Date.now() - t0 };
+        trace = { call: label, source: 'live', ms: Date.now() - t0, result: summarize(value) };
       } catch (err) {
         // In live mode a failed call is left EMPTY and shown as an error. We never fill the gap with demo data.
         value = empty;
@@ -99,10 +99,16 @@ export function createQloo(opts = {}) {
       }
     } else {
       value = fx();
-      trace = { call: label, source: 'fixture', ms: Date.now() - t0 };
+      trace = { call: label, source: 'fixture', ms: Date.now() - t0, result: summarize(value) };
     }
     if (trace.source !== 'error') cache.set(key, { t: Date.now(), value, trace });
     return { value, trace };
+  }
+
+  // A short, id-free summary of what Qloo returned, shown in the trace so a request can be tied to its result.
+  function summarize(v) {
+    if (Array.isArray(v)) return v.length ? `${v.length} results; top: ` + v.slice(0, 3).map((e) => `${e.name}${typeof e.affinity === 'number' ? ' (' + e.affinity.toFixed(2) + ')' : ''}`).join(', ') : 'no results';
+    return v && v.name ? `matched: ${v.name}` : 'no match';
   }
 
   // name -> {id, name} | null

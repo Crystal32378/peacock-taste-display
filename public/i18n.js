@@ -142,7 +142,7 @@ export const UI = {
     bridgeDemo: (cat, item) => `Nothing met on “${cat}”. The peacock (demo data, not Qloo yet) suggests you try ${item}.`,
     engine: {
       live: 'Source: <b>Qloo live API</b>. Identical items are matched directly; “≈” (similar taste) comes from Qloo insights.',
-      legend: 'live = asked Qloo just now · cache = asked earlier, kept briefly on our server · skip = Qloo cannot use that item as a taste signal · error = Qloo refused the call',
+      legend: 'live = asked Qloo just now · cache = asked earlier, kept briefly on our server · skip = Qloo cannot use that item as a taste signal · error = Qloo refused the call · → = what Qloo sent back (top three, with its affinity number)',
       tally: (c) => `This answer: ${c.live} live · ${c.cache} cached · ${c.skip} skipped · ${c.error} errors.`,
       fixture: 'Source: <b>offline demo data (fixture)</b>.',
       fixtureNote: ' This deployment has no Qloo API key yet, so the “neighbours” below are hand-written demo data, not Qloo output.',
@@ -176,7 +176,7 @@ export const UI = {
     bridgeDemo: (cat, item) => `「${cat}」這根沒對上。孔雀（示範資料，尚未接 Qloo）倒是建議你試試 ${item}。`,
     engine: {
       live: '資料來源：<b>Qloo 即時 API</b>。完全相同的項目直接比對；「≈」（口味相近）來自 Qloo 的 insights 結果。',
-      legend: 'live＝剛剛問了 Qloo ・ cache＝先前查詢的結果，暫存在伺服器 ・ skip＝Qloo 無法把這個項目當口味訊號 ・ error＝Qloo 拒絕了這次呼叫',
+      legend: 'live＝剛剛問了 Qloo ・ cache＝先前查詢的結果，暫存在伺服器 ・ skip＝Qloo 無法把這個項目當口味訊號 ・ error＝Qloo 拒絕了這次呼叫 ・ →＝Qloo 回傳的結果（前三筆與它給的 affinity 數字）',
       tally: (c) => `這次回答：${c.live} 次即時、${c.cache} 次快取、${c.skip} 次略過、${c.error} 次錯誤。`,
       fixture: '資料來源：<b>離線示範資料（fixture）</b>。',
       fixtureNote: '這個部署還沒有設定 Qloo API key，所以下面的「相近」是我們手寫的示範資料，不是 Qloo 的輸出。',
