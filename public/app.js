@@ -15,7 +15,7 @@ function quip(mode, key, gapType) {
   const needsCat = body.includes('{cat}') || head.includes('{cat}');
   const type = needsCat ? (gapType || 'movie') : '';
   const cat = catName(type || 'movie'); // same word the recording uses, so text and voice always agree
-  return [head.replace('{cat}', cat), body.replace('{cat}', cat), lineId(st.lang, mode, key, i, type), lineText(head, body, cat)];
+  return [head.replace('{cat}', cat), body.replace('{cat}', cat), lineId(st.lang, mode, key, i, type), st.lang === 'zh' ? body.replace('{cat}', cat) : lineText(head, body, cat)]; // zh voice reads the Chinese body only; the English headline stays on screen
 }
 // show the caption and (if sound is on) let the peacock say it
 function speakCap(q, delay = 0) { cap(q[0], q[1]); snd.say(st.lang, q[2], q[3], delay); }
@@ -99,6 +99,9 @@ function applyResult(r) {
   // the same matches as plain readable text: on a phone the names on the feathers are tiny
   const hits = r.feathers.filter((f) => f.state !== 'none').map((f) => `${catName(f.type)} ${f.state === 'neighbor' ? '≈ ' : ''}${f.item}`);
   $('hits').textContent = hits.length ? T().hits + hits.join(' · ') : '';
+  // their whole tail, always: a folded tail still has ten feathers, and you should see what is on them
+  const who = st.cast.find((c) => c.id === r.profileId);
+  $('theirs').textContent = who ? T().theirs(who.name) + r.feathers.filter((f) => f.theirs.length).map((f) => `${catName(f.type)} ${f.theirs.join('/')}`).join(' · ') : '';
   feathers.forEach((el) => el.classList.remove('fav'));
   labs.forEach((el) => el.classList.toggle('fav', !!r.favorite && el.dataset.type === r.favorite.type));
   renderTrace(r);
@@ -110,6 +113,8 @@ function renderTrace(r) {
     : r.engine === 'fixture' ? E.fixture + (r.mode === 'fixture' ? E.fixtureNote : '')
     : r.engine === 'fallback' ? E.fallback : E.mixed;
   if (r.errors) $('engine').innerHTML += ' ' + E.errors(r.errors);
+  const tally = { live: 0, cache: 0, skip: 0, error: 0 }; r.trace.forEach((t) => { if (t.source in tally) tally[t.source]++; });
+  $('engine').innerHTML += `<br>${E.tally(tally)}<span class="legend">${E.legend}</span>`;
   $('trace').textContent = r.trace.map((t) => `[${t.source}${t.ms != null ? ' ' + t.ms + 'ms' : ''}] ${decodeURIComponent(t.call)}${t.error ? '  !! ' + t.error : ''}`).join('\n') || T().noCalls;
 }
 
@@ -124,7 +129,7 @@ async function play() {
   snd.stopVoice(); // the previous character's line must not talk over this one
   fan.classList.remove('match', 'verdict', 'swoon'); $('bridge').hidden = true; stopGold();
   // wipe the previous verdict at once, so a new face never wears the last one's caption or gold names
-  cap('', ''); $('hits').textContent = '';
+  cap('', ''); $('hits').textContent = ''; $('theirs').textContent = '';
   feathers.forEach((el) => el.classList.remove('res', 'bridge', 'fav'));
   labs.forEach((el) => { el.classList.remove('res', 'bridge', 'fav'); el.querySelector('.nm').textContent = ''; });
   setHead('eager');
@@ -156,7 +161,7 @@ async function play() {
   if (match && prev >= 2) {
     // after a losing streak the peacock does a double take before reacting; wait for the line to finish
     setHead('startled'); speakCap(quip(st.mode, 'startle', gapType));
-    await Promise.all([sleep(1700), snd.whenDone(3800)]); if (id !== st.rid) return;
+    await Promise.all([sleep(1700), snd.whenDone(6500)]); if (id !== st.rid) return;
   }
   if (match && !reduce) fan.classList.add('match');
   startGold(r);
@@ -188,8 +193,9 @@ function showBridge() {
   fan.classList.add('open'); // the door needs the tail open again
   setHead(st.mode === 'lover' ? 'flustered' : 'startled');
   $('bridge').hidden = true;
-  snd.chime(); snd.say('en', 'en.bridge.head', T().bridgeHead); // the one recorded line of the door; the rest is templated text
-  cap(T().bridgeHead, b.kind === 'theirs' ? T().bridgeTheirs(cn, b.item, p.name) : b.kind === 'shared' ? T().bridgeShared(cn, b.item, p.name) : (r.engine === 'live' ? T().bridgeQloo : T().bridgeDemo)(cn, b.item));
+  snd.chime(); if (st.lang === 'en') snd.say('en', 'en.bridge.head', T().bridgeHead); // the one recorded line of the door (English only); the rest is templated text
+  const af = typeof b.affinity === 'number' ? (st.lang === 'en' ? ` (affinity ${b.affinity.toFixed(2)})` : `（affinity ${b.affinity.toFixed(2)}）`) : '';
+  cap(T().bridgeHead, b.kind === 'theirs' ? T().bridgeTheirs(cn, b.item, p.name, af) : b.kind === 'shared' ? T().bridgeShared(cn, b.item, p.name, af) : (r.engine === 'live' ? T().bridgeQloo(cn, b.item, p.name, af) : T().bridgeDemo(cn, b.item)));
 }
 
 function next() { st.idx = (st.idx + 1) % st.cast.length; play(); }
@@ -218,7 +224,7 @@ async function init() {
     document.documentElement.dataset.lang = st.lang;
     document.title = T().title;
     $('replay').textContent = T().replay; $('next').textContent = T().next; $('bridge').textContent = T().bridge;
-    $('sumText').textContent = T().summary; $('setup').textContent = T().setup; $('castHint').textContent = T().pick; $('fict').textContent = T().fict; $('note').textContent = T().note;
+    $('sumText').textContent = T().summary; $('setup').textContent = T().setup; $('castHint').textContent = T().pick; $('fict').textContent = T().fict; $('note').textContent = T().note; $('foot').textContent = T().foot;
     $('lEn').setAttribute('aria-pressed', st.lang === 'en'); $('lZh').setAttribute('aria-pressed', st.lang === 'zh');
     setAuto(); $('snd').textContent = UI_SOUND[st.lang](snd.isOn()); $('snd').setAttribute('aria-pressed', snd.isOn());
   };

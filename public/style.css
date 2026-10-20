@@ -180,3 +180,7 @@ html:not([data-lang=en]) .cap .hits{font-family:var(--tc)}
 .who .tasteLine{margin:8px auto 0;font-family:var(--tc);font-weight:300;font-size:12px;line-height:1.65;color:var(--dim);max-width:17em;opacity:.9}
 html[data-lang=en] .who .tasteLine{font-family:var(--ui);letter-spacing:.01em}
 @media (max-width:900px){.who .tasteLine{grid-column:1/-1;max-width:none;margin:6px 0 0;text-align:left}}
+
+.cap .theirs{margin:6px 0 0;font-family:var(--tc);font-size:12px;line-height:1.6;color:var(--dim);opacity:.8}
+html[data-lang=en] .cap .theirs{font-family:var(--ui)}
+.engine .legend{display:block;margin-top:4px;opacity:.75}
