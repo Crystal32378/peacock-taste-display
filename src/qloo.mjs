@@ -99,5 +99,18 @@ export function createQloo(opts = {}) {
     return run(`i|${type}|${ids.join(',')}`, `GET ${q}`, async () => extractEntities(await liveGet(q)), () => fixtureRelated(type, names));
   }
 
-  return { mode, resolve, related, baseUrl };
+  // Diagnostic only (used by the token-gated /debug/qloo): raw status + trimmed body. Never includes the key.
+  async function probe(pathAndQuery) {
+    if (mode() !== 'live') return { status: 0, body: 'no key set' };
+    const ctl = new AbortController();
+    const timer = setTimeout(() => ctl.abort(), timeoutMs);
+    try {
+      const res = await fetchImpl(baseUrl + pathAndQuery, { headers: { 'X-Api-Key': apiKey, Accept: 'application/json' }, signal: ctl.signal });
+      return { status: res.status, body: (await res.text()).slice(0, 2500) };
+    } catch (err) {
+      return { status: 0, body: String(err?.message || err) };
+    } finally { clearTimeout(timer); }
+  }
+
+  return { mode, resolve, related, baseUrl, probe };
 }

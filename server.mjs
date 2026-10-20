@@ -7,6 +7,7 @@
 //   GET  /              the peacock page (public/)
 // Everything is fictional and adult (18+). Nobody is contacted. No compatibility score exists.
 import http from 'node:http';
+import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -139,6 +140,24 @@ export const server = http.createServer(async (req, res) => {
     }
     if (url.pathname === '/health' && req.method === 'GET')
       return sendJson(res, 200, { ok: true, ...SERVER, spec: SPEC, qloo: qloo.mode(), tools: TOOLS.map((t) => t.name) });
+    // Temporary diagnostics: only exists while DEBUG_TOKEN is set in the environment (delete it when done).
+    // Shows trimmed raw Qloo responses so the parser can be checked. Never prints the API key.
+    if (url.pathname === '/debug/qloo' && req.method === 'GET') {
+      const want = process.env.DEBUG_TOKEN || '';
+      const got = url.searchParams.get('t') || '';
+      const ok = want && got.length === want.length && crypto.timingSafeEqual(Buffer.from(got), Buffer.from(want));
+      if (!ok || limited('debug|' + ip, 6)) return sendJson(res, 404, { error: 'Not found' });
+      const enc = encodeURIComponent, out = [];
+      const run = async (p) => { const r = await qloo.probe(p); out.push(`=== GET ${p}\nHTTP ${r.status}\n${r.body}\n`); return r.body; };
+      const first = await run('/search?query=' + enc('Brian Eno') + '&types=' + enc('urn:entity:artist') + '&take=2');
+      await run('/search?query=' + enc('Brian Eno') + '&take=2');
+      await run('/search?query=' + enc('Hades') + '&types=' + enc('urn:entity:video_game') + '&take=1');
+      const id = (first.match(/"(?:entity_id|id)"\s*:\s*"([^"]+)"/) || [])[1];
+      if (id) await run('/v2/insights?filter.type=' + enc('urn:entity:artist') + '&signal.interests.entities=' + enc(id) + '&take=4');
+      else out.push('No entity id found in the first search response.\n');
+      res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'no-store' });
+      return res.end(out.join('\n'));
+    }
     if (url.pathname === '/api/cast' && req.method === 'GET') return sendJson(res, 200, { cast: publicCast(), feathers: FEATHER_ORDER, labels: FEATHER_LABEL, viewer: defaultViewer });
     if (url.pathname === '/api/display' && req.method === 'POST') {
       if (limited(ip)) return sendJson(res, 429, { error: 'The peacock needs a breath. Try again in a minute.' });
