@@ -37,7 +37,7 @@ export const viewer = {
 
 export const cast = [
   { id: 'mira', name: "Mira", age: 31, city: '台北', portrait: 'mira.jpg', blurb: "安靜、觀察入微。一件好外套穿十年。", cityEn: 'Taipei', blurbEn: "Quiet and watchful. One good coat, worn for ten years.",
-    tag: "安靜極簡派", tagEn: "The quiet minimalist", taste: "環境音樂、藝術評論，和一杯很好的咖啡。", tasteEn: "Ambient records, art criticism, one very good coffee.",
+    tag: "安靜極簡派", tagEn: "The quiet minimalist", taste: "環境音樂、藝術評論，一杯很好的咖啡，和一部很吵的影集。", tasteEn: "Ambient records, art criticism, one very good coffee, and one very loud television series.",
     feathers: { movie: ["Lost in Translation"], tv_show: ["Gilmore Girls"], artist: ["Brian Eno"], book: ["Ways of Seeing"], place: ["Blue Bottle Coffee"], destination: ["Copenhagen"], podcast: ["Desert Island Discs"], video_game: ["Gris"], brand: ["Jil Sander"], person: ["Sofia Coppola"] } },
   { id: 'dax', name: "Dax", age: 29, city: '新竹', portrait: 'dax.jpg', blurb: "輕鬆愛玩，同一關可以死兩百次。", cityEn: 'Hsinchu', blurbEn: "Easygoing and game-obsessed. Will happily die two hundred times on one screen.",
     tag: "再試一次派", tagEn: "The one-more-try player", taste: "深夜闖關、法式浩室，動畫最好也跟得上節拍。", tasteEn: "Late-night runs, French house, and animation that keeps up with the beat.",

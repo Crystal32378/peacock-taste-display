@@ -98,7 +98,8 @@ function applyResult(r) {
   fan.classList.toggle('swoon', r.verdict === 'swoon');
   // the same matches as plain readable text: on a phone the names on the feathers are tiny
   const hits = r.feathers.filter((f) => f.state !== 'none').map((f) => `${catName(f.type)} ${f.state === 'neighbor' ? '≈ ' : ''}${f.item}`);
-  $('hits').textContent = hits.length ? T().hits + hits.join(' · ') : '';
+  // one meeting only: the peacock's own favourite line already says it, so the list stays quiet
+  $('hits').textContent = hits.length && !(hits.length === 1 && r.favorite) ? T().hits + hits.join(' · ') : '';
   // their whole tail, always: a folded tail still has ten feathers, and you should see what is on them
   const who = st.cast.find((c) => c.id === r.profileId);
   $('theirs').textContent = who ? T().theirs(who.name) + r.feathers.filter((f) => f.theirs.length).map((f) => `${catName(f.type)} ${f.theirs.join('/')}`).join(' · ') : '';
