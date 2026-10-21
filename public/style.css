@@ -201,3 +201,5 @@ html[data-lang=en] .cap .theirs{font-family:var(--ui)}
 .via{margin:6px 0 0;max-width:46em;font-size:12px;letter-spacing:.02em;color:var(--gold)}
 .castHint{margin:14px 0 0}
 .castHint + .cast{margin-top:8px;margin-bottom:6px}
+@media (min-width:601px){ #stageSvg svg{max-height:max(340px,calc(100vh - 340px));margin:0 auto;display:block} }
+@media (min-width:601px) and (max-height:820px){ .arch{width:132px;height:165px;margin-inline:auto} .who .blurb,.who .tasteLine,.who .fict{display:none} #name{font-size:30px} }
