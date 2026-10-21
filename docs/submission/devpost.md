@@ -5,6 +5,11 @@
 **Try it:** https://taste-display.onrender.com (free host: the first load can take up to a minute)
 **Code (MIT):** https://github.com/Crystal32378/peacock-taste-display
 
+## Try it in 60 seconds
+1. Open the link and wait for the peacock (a free host may need up to a minute to wake).
+2. Pick a character. Watch which feathers go gold, and read what the peacock says about them.
+3. Scroll to the bottom and open **Under the hood** to see the real Qloo calls behind that verdict.
+
 ## What it is
 A peacock that shows taste. Qloo's ten entity types are the ten feathers of its tail: film, series, artist, book, place, destination, podcast, game, brand, person. You are a visitor with a demo taste. Pick one of ten fictional adults and the peacock compares your ten feathers with theirs.
 
@@ -34,7 +39,7 @@ Engineering that matters in practice:
 A fully playable demo, not a sketch: ten characters with full ten-feather taste profiles, a peacock whose reaction (swoon, shiver, flicker, fold, yawn, eye-roll, double take) is chosen from what actually matched, bilingual captions, recorded British voices, a mobile layout with a fixed control bar, and an honest "how it works" panel. Everything the peacock says is checked against what is on screen: it never claims a feather moved that did not.
 
 ## Potential impact
-We do not claim to solve a large problem. We make a narrower, credible point: many recommendation and matching products compress taste into one number, and a number invites ranking people. A display of *which things meet* is a gentler and more useful starting point for conversation, for friends, communities, dating-adjacent products, and teams who want to find common ground. The peacock also shows its working, which makes Qloo's output understandable to people who are not technical. We have not tested it with real users yet; that is the first thing we would do next.
+We do not claim to solve a large problem. We make a narrower, credible point: many recommendation and matching products compress taste into one number, and a number invites ranking people. Picture two people at a community event: instead of "you are a 78% match", they see that their *books* and *places* meet, and that is what they start talking about. A display of *which things meet* is a gentler and more useful starting point for conversation, for friends, communities, dating-adjacent products, and teams who want to find common ground. The peacock also shows its working, which makes Qloo's output understandable to people who are not technical. We have not tested it with real users yet; that is the first thing we would do next.
 
 ## Quality of the idea
 The creative move is to treat Qloo's ten entity types as ten feathers: a single, legible shape that shows breadth of taste and lets "no overlap" be a graceful outcome, not a failure. The door turns a miss into a Qloo recommendation to explore, with its basis shown.

@@ -143,7 +143,7 @@ export const UI = {
     bridgeShared: (cat, item, name, af = '') => `Nothing met on “${cat}”. But Qloo recommends ${item}${af} from your taste, and from ${name}’s too.`,
     bridgeQloo: (cat, item, name, af = '') => `Nothing met on “${cat}”. Qloo suggests you try ${item}${af}.`,
     bridgeDemo: (cat, item) => `Nothing met on “${cat}”. The peacock (demo data, not Qloo yet) suggests you try ${item}.`,
-    via: 'Powered by Qloo: ten feathers = Qloo’s ten entity types. Also an MCP server for agents (see Under the hood).',
+    via: 'Powered by Qloo: ten feathers = Qloo’s ten entity types. Also an MCP server for agents (details at the bottom of the page).',
     mcpNote: 'Also an MCP server (Streamable HTTP) at <code>/mcp</code>: tools <code>list_cast</code>, <code>open_display</code>, <code>bridge_feather</code>.',
     engine: {
       live: 'Source: <b>Qloo live API</b>. Identical items are matched directly; “≈” (similar taste) comes from Qloo insights.',
@@ -180,7 +180,7 @@ export const UI = {
     bridgeShared: (cat, item, name, af = '') => `「${cat}」這根沒對上。但 Qloo 從你的口味，也從 ${name} 的口味，都推薦了 ${item}${af}。`,
     bridgeQloo: (cat, item, name, af = '') => `「${cat}」這根沒對上。Qloo 倒是推薦你可以試試 ${item}${af}。`,
     bridgeDemo: (cat, item) => `「${cat}」這根沒對上。孔雀（示範資料，尚未接 Qloo）倒是建議你試試 ${item}。`,
-    via: '由 Qloo 驅動：十根羽毛＝Qloo 的十種 entity type。同一套引擎也是給 agent 用的 MCP server（見下方「背後怎麼算的」）。',
+    via: '由 Qloo 驅動：十根羽毛＝Qloo 的十種 entity type。同一套引擎也是給 agent 用的 MCP server（細節在頁面最下方）。',
     mcpNote: '同一套引擎也是 MCP server（Streamable HTTP），位置 <code>/mcp</code>，工具：<code>list_cast</code>、<code>open_display</code>、<code>bridge_feather</code>。',
     engine: {
       live: '資料來源：<b>Qloo 即時 API</b>。完全相同的項目直接比對；「≈」（口味相近）來自 Qloo 的 insights 結果。',
