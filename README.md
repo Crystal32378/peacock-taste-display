@@ -102,7 +102,7 @@ The page labels every call `live` (asked Qloo just now), `cache` (asked earlier)
 - `neighbor` matching reads the first 40 insight results; a connection further down the list is missed.
 - The hackathon API accepts the games type only as `urn:entity:videogame`, which differs from the docs. The adapter handles it.
 - The English voice is recorded; Chinese uses the browser voice and sounds like a browser voice.
-- One item repeats across characters (Blue Bottle Coffee), and Eslite Bookstore is shared by two. Several items are chosen for the cast's coherence, not looked up per person.
+- One item repeats across characters (Blue Bottle Coffee). Several items are chosen for the cast's coherence, not looked up per person.
 - The cast is ten fictional people. It shows the idea; it does not prove that taste overlap predicts friendship.
 - The free Render plan sleeps when idle, so the first load can take up to a minute.
 - Checked in a desktop browser and a 390 px window; not yet on a range of real phones. Screen-reader announcements may repeat a caption.
